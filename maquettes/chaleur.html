@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Osmose · La chaleur</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&f[]=satoshi@400,500,700&display=swap">
+<style>
+:root{--ink:#FFFFFF;--muted:rgba(255,255,255,.66);--panel:rgba(5,5,5,.62);--line:rgba(255,255,255,.16);--hot:#FF7A1A;--mag:#FF2E88;--cold:#3AD1FF}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#050505;color:var(--ink);font-family:Satoshi,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+canvas#heat{position:fixed;inset:0;width:100%;height:100%;z-index:0;filter:blur(24px) saturate(1.15);transform:scale(1.08)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.wave{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0}
+.wave.hot{background:radial-gradient(circle at 50% 60%,rgba(255,122,26,.75),rgba(255,46,136,.35) 40%,transparent 70%);animation:wave 1.4s ease-out}
+.wave.cold{background:linear-gradient(180deg,transparent,rgba(58,209,255,.55) 45%,transparent 90%);animation:sweep 1.2s ease-out}
+@keyframes wave{0%{opacity:0;transform:scale(.4)}25%{opacity:1}100%{opacity:0;transform:scale(1.6)}}
+@keyframes sweep{0%{opacity:0;transform:translateY(-60%)}30%{opacity:1}100%{opacity:0;transform:translateY(60%)}}
+.app{position:relative;z-index:2;max-width:600px;margin:0 auto;padding:18px 18px calc(28px + env(safe-area-inset-bottom));min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center}
+.mark{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:21px;letter-spacing:-.01em}
+.thermo{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:999px;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--line)}
+.thermo .tube{width:72px;height:6px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden}
+.thermo .tube i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--cold),var(--mag),var(--hot));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.thermo b{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;min-width:52px;text-align:right}
+.screen{display:none;flex-direction:column;gap:14px;flex:1;padding-top:22px}
+.screen.on{display:flex;animation:in .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes in{from{opacity:0;transform:translateY(16px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.plate{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:18px}
+.over{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:clamp(30px,8vw,44px);line-height:.98;letter-spacing:-.02em;margin:8px 0 0}
+h1 i{font-style:italic}
+.voice{margin:8px 0 0;font-size:15px;color:var(--muted)}
+.guests{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.g{padding:8px 12px;border-radius:999px;font-weight:700;font-size:15px;background:rgba(255,255,255,.12);border:1px solid var(--line)}
+.g.hid{color:rgba(255,255,255,.35);letter-spacing:.3em}
+.g.new{animation:emerge .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes emerge{0%{opacity:0;filter:blur(10px);transform:scale(1.3)}100%{opacity:1;filter:none;transform:none}}
+.more{background:none;border:1px dashed rgba(255,255,255,.5);color:var(--ink);border-radius:999px;padding:8px 12px;font:700 13px Satoshi,sans-serif;cursor:pointer;min-height:38px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{min-height:74px;border-radius:18px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);color:var(--ink);text-align:left;padding:14px;font:700 18px/1.1 'Cabinet Grotesk',sans-serif;cursor:pointer;transition:transform .15s,background .3s,box-shadow .3s,opacity .3s}
+.opt:active{transform:scale(.97)}
+.opt i{font-style:italic}
+.opt.right{background:linear-gradient(135deg,var(--hot),var(--mag));border-color:transparent;box-shadow:0 0 50px rgba(255,122,26,.55)}
+.opt.wrong{background:rgba(58,209,255,.22);border-color:var(--cold)}
+.opt.dim{opacity:.35}
+.fb{display:none}
+.fb.on{display:flex;flex-direction:column;gap:10px;animation:in .6s cubic-bezier(.2,.8,.2,1) both}
+.say{margin:0;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:22px;line-height:1.1}
+.say i{font-style:italic}
+.stat{margin:0;font-size:14px;color:var(--muted)}
+.btn{align-self:flex-start;min-height:54px;border-radius:999px;border:none;background:var(--ink);color:#050505;font:700 16px Satoshi,sans-serif;padding:0 24px;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+/* sonde */
+.big{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(110px,34vw,170px);line-height:.82;letter-spacing:-.04em;text-align:center}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:48px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--cold),#6B2CFF,var(--mag),var(--hot))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;margin-top:-12px;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.2),0 0 26px rgba(255,255,255,.7)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--cold),#6B2CFF,var(--mag),var(--hot))}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:none}
+.probe-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.probe{min-height:50px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:700 15px Satoshi,sans-serif;padding:0 18px;cursor:pointer}
+.probe:disabled{opacity:.4;cursor:default}
+.reading{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:20px;min-height:1.2em}
+/* givre */
+.frostwrap{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0b0b0b}
+.creds{padding:22px 18px;display:flex;flex-direction:column;gap:8px}
+.creds .l{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.creds .art{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(48px,15vw,78px);line-height:1;letter-spacing:-.02em}
+.frost{position:absolute;inset:0;backdrop-filter:blur(14px) brightness(1.4);-webkit-backdrop-filter:blur(14px) brightness(1.4);background:rgba(220,240,255,.18);transition:opacity 1.6s ease,backdrop-filter 1.6s ease}
+.frost::after{content:'';position:absolute;inset:0;opacity:.5;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.02 .09' numOctaves='4' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .9  0 0 0 0 .96  0 0 0 0 1  0 0 0 .9 -.25'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>")}
+.frost.melt{opacity:0}
+/* fin */
+.poster{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:space-between;padding:20px}
+.poster .bg{position:absolute;inset:-20%;filter:blur(30px);z-index:0}
+.poster .gr{position:absolute;inset:0;z-index:1;opacity:.35;mix-blend-mode:overlay;background-image:inherit}
+.poster > *:not(.bg){position:relative;z-index:2}
+.poster .ps{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(100px,30vw,170px);line-height:.8;letter-spacing:-.05em}
+.poster .pt{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:22px;line-height:1.05}
+.share{font:700 15px Satoshi,sans-serif;padding:14px 16px;border-radius:16px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+footer{margin-top:22px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+@media (prefers-reduced-motion:reduce){.wave{display:none}}
+</style>
+</head>
+<body>
+<canvas id="heat" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="wave" id="wave" aria-hidden="true"></div>
+<div class="app">
+  <header>
+    <span class="mark">osmose</span>
+    <span class="thermo" aria-label="Température de ta partie"><span class="tube"><i id="tube"></i></span><b id="deg">36,6°</b></span>
+  </header>
+
+  <section class="screen on" id="s1">
+    <div class="plate">
+      <span class="over">Défi du 13 nov. · 1/3 · le casting</span>
+      <h1>Quel album de 1998 réunit ces invités ?</h1>
+      <p class="voice">Chaque bonne réponse fait monter la température. Chaque invité dévoilé la fait redescendre un peu.</p>
+      <div class="guests" id="guests"></div>
+    </div>
+    <div class="opts" id="o1"></div>
+    <div class="fb plate" id="fb1"><p class="say" id="say1"></p><p class="stat">34 % ont trouvé · 41 % ont dit <i>L’Amour est mort</i></p><button class="btn" type="button" data-go="2">Question suivante</button></div>
+  </section>
+
+  <section class="screen" id="s2">
+    <div class="plate">
+      <span class="over">2/3 · tu chauffes ?</span>
+      <h1>Le 18 juin 2012 à Bercy, combien de fois d’affilée <b>Jay-Z</b> et <b>Kanye West</b> ont-ils joué <i>Ni**as in Paris</i> ?</h1>
+      <p class="voice">Tu as 2 sondes. Chacune te dit si tu chauffes, et coûte 10 points.</p>
+    </div>
+    <div class="big" id="num">6</div>
+    <input type="range" id="slider" min="1" max="15" value="6" aria-label="Nombre de fois">
+    <div class="probe-row"><button class="probe" type="button" id="probe">Sonder · 2 restantes</button><span class="reading" id="reading"></span></div>
+    <button class="btn" type="button" id="lock">C’est mon chiffre</button>
+    <div class="fb plate" id="fb2"><p class="say" id="say2"></p><p class="stat">9 % pile · la plupart ont sondé deux fois</p><button class="btn" type="button" data-go="3">Question suivante</button></div>
+  </section>
+
+  <section class="screen" id="s3">
+    <div class="plate">
+      <span class="over">3/3 · la pochette</span>
+      <h1>Qui signe la pochette de <i>Deo Favente</i> de <b>SCH</b> ?</h1>
+      <p class="voice">La réponse est sous le givre. Elle fond quand tu as choisi.</p>
+    </div>
+    <div class="frostwrap"><div class="creds"><span class="l">Deo Favente · direction artistique et pochette</span><span class="art">Koria</span></div><div class="frost" id="frost"></div></div>
+    <div class="opts" id="o3"></div>
+    <div class="fb plate" id="fb3"><p class="say" id="say3"></p><p class="stat">61 % ont trouvé · 39 % ont dit Fifou</p><button class="btn" type="button" data-go="4">Voir mon affiche du jour</button></div>
+  </section>
+
+  <section class="screen" id="s4">
+    <div class="poster" id="poster">
+      <div class="bg" id="posterBg"></div>
+      <span class="over" style="color:#fff">Osmose · défi du 13 nov.</span>
+      <div><div class="ps" id="ps">0</div><div class="pt" id="pt"></div></div>
+    </div>
+    <div class="share" id="share"></div>
+    <div class="row"><button class="btn" type="button" id="copy">Partager</button><button class="btn ghost" type="button" id="again">Rejouer</button></div>
+    <p class="voice" style="margin:0">Ton affiche est unique : ses couleurs viennent de ta partie.</p>
+  </section>
+
+  <footer><span>Maquette · stats fictives</span><span>La chaleur</span></footer>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = (s) => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S = { shown: 2, p1: -1, val: 6, probes: 2, locked: false, p3: -1, pts: [0, 0, 0] };
+let T = 0.4, Tshown = 0.4;
+
+/* ---------- le dégradé vivant ---------- */
+const cv = $('#heat'), cx = cv.getContext('2d');
+const SC = 0.18;
+function size() { cv.width = Math.max(60, innerWidth * SC); cv.height = Math.max(100, innerHeight * SC); }
+addEventListener('resize', size); size();
+const COLD = [[58, 209, 255], [107, 44, 255], [20, 30, 90], [40, 120, 255], [10, 10, 40]];
+const HOT = [[255, 46, 136], [255, 122, 26], [255, 209, 102], [255, 60, 60], [120, 20, 80]];
+const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+const blobs = Array.from({ length: 5 }, (_, i) => ({ a: i * 1.3, b: i * 2.1, s: 0.15 + i * 0.04, r: 0.45 + (i % 3) * 0.12 }));
+let px = -1, py = -1, pheat = 0;
+addEventListener('pointermove', (e) => { px = e.clientX * SC; py = e.clientY * SC; pheat = Math.min(1, pheat + 0.08); });
+addEventListener('pointerdown', (e) => { px = e.clientX * SC; py = e.clientY * SC; pheat = 1; });
+function draw(now) {
+  const t = now / 1000;
+  Tshown += (T - Tshown) * 0.03;
+  const w = cv.width, h = cv.height;
+  cx.globalCompositeOperation = 'source-over';
+  cx.fillStyle = '#050505'; cx.fillRect(0, 0, w, h);
+  cx.globalCompositeOperation = 'lighter';
+  blobs.forEach((b, i) => {
+    const sp = reduce ? 0 : b.s;
+    const x = w * (0.5 + 0.38 * Math.sin(t * sp + b.a)), y = h * (0.5 + 0.4 * Math.cos(t * sp * 0.8 + b.b));
+    const c = mix(COLD[i], HOT[i], Math.max(0, Math.min(1, Tshown)));
+    const R = Math.max(w, h) * b.r * (0.8 + Tshown * 0.4);
+    const g = cx.createRadialGradient(x, y, 0, x, y, R);
+    g.addColorStop(0, 'rgba(' + c + ',' + (0.55 + Tshown * 0.3) + ')');
+    g.addColorStop(1, 'rgba(' + c + ',0)');
+    cx.fillStyle = g; cx.fillRect(0, 0, w, h);
+  });
+  if (px >= 0 && pheat > 0.01) {
+    const g = cx.createRadialGradient(px, py, 0, px, py, w * 0.35);
+    g.addColorStop(0, 'rgba(255,150,60,' + (0.5 * pheat) + ')'); g.addColorStop(1, 'rgba(255,150,60,0)');
+    cx.fillStyle = g; cx.fillRect(0, 0, w, h);
+    pheat *= 0.97;
+  }
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+function setT(v, kind) {
+  T = Math.max(0, Math.min(1, v));
+  $('#tube').style.width = (T * 100) + '%';
+  $('#deg').textContent = (30 + T * 15).toFixed(1).replace('.', ',') + '°';
+  if (kind) { const wv = $('#wave'); wv.className = 'wave'; void wv.offsetWidth; wv.className = 'wave ' + kind; if (navigator.vibrate) navigator.vibrate(kind === 'hot' ? [15, 30, 15] : 40); }
+}
+setT(0.4);
+
+/* ---------- Q1 ---------- */
+const GUESTS = ['K-reen', 'Pit Baccardi', 'Lino', 'Le Rat Luciano', 'Freeman', 'Akhenaton'];
+const pot = () => Math.max(25, 100 - (S.shown - 2) * 15);
+function renderGuests(nw) {
+  $('#guests').innerHTML = GUESTS.map((g, i) => i < S.shown ? '<span class="g' + (i === nw ? ' new' : '') + '">' + g + '</span>' : '<span class="g hid">•••</span>').join('') + (S.p1 < 0 && S.shown < 6 ? '<button class="more" type="button" id="more">Faire émerger un invité · −15</button>' : '');
+  const m = $('#more'); if (m) m.onclick = () => { S.shown++; setT(T - 0.04); renderGuests(S.shown - 1); };
+}
+renderGuests();
+function opts(el, items, right, onPick) {
+  el.innerHTML = items.map((t, i) => '<button class="opt" type="button" data-i="' + i + '">' + t + '</button>').join('');
+  el.onclick = (e) => { const b = e.target.closest('.opt'); if (!b || el.dataset.done) return; el.dataset.done = 1; const i = Number(b.dataset.i); [...el.children].forEach((x, k) => x.classList.add(k === right ? 'right' : k === i ? 'wrong' : 'dim')); onPick(i, i === right); };
+}
+opts($('#o1'), ['<i>L’Amour est mort</i>', '<i>Opéra Puccino</i>', '<i>Mauvais Œil</i>', '<i>Si Dieu veut…</i>'], 1, (i, ok) => {
+  S.p1 = i; S.pts[0] = ok ? pot() : 0; renderGuests();
+  setT(ok ? T + 0.3 : T - 0.22, ok ? 'hot' : 'cold');
+  $('#say1').innerHTML = ok ? 'Ça chauffe. <i>Opéra Puccino</i>, Oxmo Puccino. +' + S.pts[0] : 'Coup de froid. C’était <i>Opéra Puccino</i>, d’Oxmo.';
+  $('#fb1').classList.add('on');
+});
+
+/* ---------- Q2 : sondes ---------- */
+const slider = $('#slider');
+slider.addEventListener('input', () => { if (S.locked) return; S.val = Number(slider.value); $('#num').textContent = S.val; $('#reading').textContent = ''; });
+const words = (d) => d === 0 ? ['Brûlant.', 1] : d === 1 ? ['Très chaud.', 0.85] : d <= 3 ? ['Tiède.', 0.6] : d <= 6 ? ['Froid.', 0.3] : ['Glacial.', 0.05];
+$('#probe').onclick = () => {
+  if (S.locked || S.probes <= 0) return;
+  S.probes--;
+  const [w, k] = words(Math.abs(S.val - 12));
+  $('#reading').textContent = S.val + ' : ' + w;
+  setT(k, k > 0.55 ? 'hot' : 'cold');
+  $('#probe').textContent = S.probes ? 'Sonder · ' + S.probes + ' restante' : 'Plus de sondes';
+  $('#probe').disabled = S.probes === 0;
+};
+$('#lock').onclick = () => {
+  if (S.locked) return;
+  S.locked = true; slider.disabled = true; $('#lock').style.display = 'none'; $('#probe').disabled = true;
+  const d = Math.abs(S.val - 12), used = 2 - S.probes;
+  S.pts[1] = Math.max(0, 100 - d * 20 - used * 10);
+  setT(d === 0 ? 0.95 : d <= 2 ? 0.65 : 0.25, d <= 2 ? 'hot' : 'cold');
+  $('#num').innerHTML = S.val + (d ? '<span style="font-size:.3em;letter-spacing:0;opacity:.7"> → 12</span>' : '');
+  $('#say2').innerHTML = (d === 0 ? 'Brûlant : douze fois, record de la tournée.' : 'Écart de ' + d + '. C’était douze fois d’affilée.') + ' +' + S.pts[1] + (used ? ' (' + used + ' sonde' + (used > 1 ? 's' : '') + ')' : ' sans sonde');
+  $('#fb2').classList.add('on');
+};
+
+/* ---------- Q3 ---------- */
+opts($('#o3'), ['<b>Fifou</b>', '<b>Fifou</b>', '<b>Koria</b>', '<b>Fifou</b>'], 2, (i, ok) => {
+  S.p3 = i; S.pts[2] = ok ? 100 : 0;
+  $('#frost').classList.add('melt');
+  setT(ok ? T + 0.3 : T - 0.25, ok ? 'hot' : 'cold');
+  $('#say3').innerHTML = ok ? 'Le givre fond : Koria. Pour une fois, ce n’était pas Fifou. +100' : 'Le givre fond, et ce n’est pas Fifou : c’est Koria.';
+  $('#fb3').classList.add('on');
+});
+
+/* ---------- fin : l'affiche ---------- */
+function renderEnd() {
+  const sc = S.pts[0] + S.pts[1] + S.pts[2];
+  const pct = Math.max(4, Math.min(98, Math.round(8 + sc * 0.3)));
+  const c = (i, k) => 'rgb(' + mix(COLD[i], HOT[i], k) + ')';
+  const k0 = S.pts[0] / 100, k1 = S.pts[1] / 100, k2 = S.pts[2] / 100;
+  $('#posterBg').style.background = 'radial-gradient(circle at 20% 25%,' + c(0, k0) + ',transparent 55%),radial-gradient(circle at 80% 40%,' + c(1, k1) + ',transparent 55%),radial-gradient(circle at 45% 85%,' + c(3, k2) + ',transparent 60%),' + c(4, (k0 + k1 + k2) / 3);
+  const st = performance.now();
+  const step = (now) => { const k = Math.min(1, (now - st) / 1100); $('#ps').textContent = Math.round(sc * k); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+  $('#pt').innerHTML = 'points sur 300<br>' + (30 + T * 15).toFixed(1).replace('.', ',') + '° · plus chaud que ' + pct + ' % des joueurs';
+  const gl = (p) => (p >= 100 ? '●' : p > 0 ? '◐' : '○');
+  $('#share').textContent = 'osmose n°12  ' + S.pts.map(gl).join(' ') + '  ' + sc + ' pts · ' + (30 + T * 15).toFixed(1).replace('.', ',') + '°';
+  setT(Math.max(T, sc / 300), sc > 150 ? 'hot' : null);
+}
+$('#copy').onclick = async () => { try { await navigator.clipboard.writeText($('#share').textContent); $('#copy').textContent = 'Copié'; } catch (e) { $('#copy').textContent = 'Copie impossible ici'; } };
+$('#again').onclick = () => location.reload();
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
+  $('#s' + n).classList.add('on');
+  scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 4) renderEnd();
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) go(Number(b.dataset.go)); });
+})();
+</script>
+</body>
+</html>

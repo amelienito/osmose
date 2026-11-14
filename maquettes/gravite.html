@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Osmose · La gravité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#16161A;--card:#EDEDED;--ink:#F2F2F2;--muted:#9B9BA3;--line:#2E2E35;--sig:#FFD400;--red:#FF3B30}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.app{max-width:600px;margin:0 auto;padding:18px 20px calc(28px + env(safe-area-inset-bottom));min-height:100vh;display:flex;flex-direction:column;position:relative}
+header{display:flex;justify-content:space-between;align-items:flex-start}
+.mark{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:18px}
+.lives{display:flex;gap:12px;align-items:flex-start;height:34px}
+.life{width:2px;height:22px;background:var(--muted);position:relative;transform-origin:top;animation:sway 2.2s ease-in-out infinite}
+.life:nth-child(2){animation-delay:-.7s}.life:nth-child(3){animation-delay:-1.4s}
+.life::after{content:'';position:absolute;left:50%;bottom:-10px;width:12px;height:12px;margin-left:-6px;border-radius:2px;background:var(--sig)}
+.life.lost{animation:cut .9s cubic-bezier(.5,0,1,.6) forwards}
+@keyframes sway{50%{transform:rotate(8deg)}0%,100%{transform:rotate(-8deg)}}
+@keyframes cut{to{transform:translateY(60px) rotate(40deg);opacity:0}}
+.screen{display:none;flex-direction:column;gap:16px;flex:1;padding-top:22px}
+.screen.on{display:flex;animation:in .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.over{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.over b{color:var(--sig)}
+h1{font-family:Archivo,sans-serif;font-stretch:118%;font-weight:800;font-size:clamp(25px,6.6vw,34px);line-height:1.02;margin:0;letter-spacing:-.01em}
+h1 i{font-style:italic}
+.voice{margin:0;font-size:15px;color:var(--muted)}
+/* bocal d'invités */
+.jarrow{display:flex;gap:14px;align-items:flex-end}
+.jar{flex:1;min-height:118px;border:2px solid var(--line);border-top:none;border-radius:0 0 18px 18px;padding:8px;display:flex;flex-wrap:wrap-reverse;align-content:flex-start;gap:6px;position:relative;overflow:hidden}
+.tok{background:var(--card);color:#16161A;font-weight:800;font-size:14px;padding:6px 10px;border-radius:999px;animation:fall .8s cubic-bezier(.3,0,.5,1) both}
+@keyframes fall{0%{transform:translateY(-160px) rotate(-12deg)}60%{transform:translateY(0) rotate(3deg)}75%{transform:translateY(-14px) rotate(-2deg)}88%{transform:translateY(0)}94%{transform:translateY(-4px)}100%{transform:none}}
+.jarside{display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:130px}
+.potn{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:36px;line-height:1;color:var(--sig)}
+.drop{background:transparent;border:2px dashed var(--muted);color:var(--ink);border-radius:12px;padding:8px 10px;font:700 13px Manrope,sans-serif;cursor:pointer;min-height:44px;text-align:left}
+/* cartes suspendues */
+.hang{position:relative;height:360px;user-select:none;touch-action:none}
+.rope{position:absolute;left:-6px;right:-6px;height:2px;background:#4a4a52;border-radius:2px}
+.pend{position:absolute;width:46%;transform-origin:50% 0;will-change:transform}
+.pend .str{width:2px;margin:0 auto;background:#8a8a92}
+.pend .peg{position:absolute;left:50%;top:-6px;width:10px;height:14px;margin-left:-5px;background:#8a8a92;border-radius:2px}
+.pend .crd{background:var(--card);color:#16161A;border-radius:10px;padding:14px 12px;min-height:100px;display:flex;flex-direction:column;justify-content:space-between;font:800 17px/1.1 Manrope,sans-serif;box-shadow:0 14px 26px rgba(0,0,0,.45);cursor:grab;position:relative}
+.pend .crd:active{cursor:grabbing}
+.pend .crd i{font-style:italic}
+.pend .crd small{font:700 10px Manrope,sans-serif;letter-spacing:.14em;color:#6d6d75}
+.pend.right .crd{background:var(--sig)}
+.pend.wrong .crd{background:var(--red);color:#fff}
+.pend.wrong .crd small{color:#fff}
+.pend.pinned .str{background:var(--sig)}
+.hint{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:0}
+.hint svg{flex-shrink:0;animation:nudge 1.2s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateY(5px)}}
+.fb{display:none;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:#1d1d22;border:1px solid var(--line)}
+.fb.on{display:flex;animation:in .45s cubic-bezier(.2,.8,.2,1) both}
+.say{margin:0;font-weight:800;font-size:19px;line-height:1.2}
+.say i{font-style:italic}
+.say .p{color:var(--sig)}
+.stat{margin:0;font-size:14px;color:var(--muted)}
+.btn{align-self:flex-start;min-height:52px;border-radius:999px;border:none;background:var(--ink);color:#16161A;font:800 16px Manrope,sans-serif;padding:0 22px;cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.sig{background:var(--sig)}
+/* pile de CD */
+.stackzone{position:relative;height:330px;border-bottom:3px solid #4a4a52;display:flex;justify-content:center;cursor:pointer;touch-action:manipulation}
+.stack{position:absolute;bottom:0;width:230px;height:100%}
+.case{position:absolute;left:0;width:230px;height:18px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,.55),rgba(255,255,255,.15) 8%,rgba(255,255,255,.08) 92%,rgba(255,255,255,.4));box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 2px 3px rgba(0,0,0,.35)}
+.case b{position:absolute;left:12px;top:4px;bottom:4px;width:60px;border-radius:1px}
+.case.dropin{animation:cd .55s cubic-bezier(.3,0,.5,1) both}
+@keyframes cd{0%{transform:translateY(-360px) rotate(var(--r))}70%{transform:translateY(0) rotate(0)}82%{transform:translateY(-6px)}100%{transform:none}}
+.case.ghostcase{background:transparent;box-shadow:none;border:1.5px dashed var(--muted);opacity:.6}
+.case.extra{animation:off 1s cubic-bezier(.5,0,1,.5) forwards}
+@keyframes off{to{transform:translate(260px,240px) rotate(70deg);opacity:0}}
+.mark12{position:absolute;left:-20px;right:-20px;height:0;border-top:3px solid var(--sig);opacity:0;transition:opacity .4s}
+.mark12.on{opacity:1}
+.mark12 span{position:absolute;right:0;top:-26px;font:800 13px Manrope,sans-serif;color:var(--sig);letter-spacing:.08em}
+.counter{display:flex;justify-content:space-between;align-items:center}
+.counter .n{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:56px;line-height:1}
+.counter .ctl{display:flex;gap:8px}
+.counter .ctl button{min-height:48px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);padding:0 16px;font:800 14px Manrope,sans-serif;cursor:pointer}
+/* fin */
+.bigscore{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:clamp(90px,28vw,150px);line-height:.85;letter-spacing:-.03em;display:inline-block;transform-origin:left bottom}
+.bigscore.jolt{animation:jolt .5s cubic-bezier(.2,1.8,.4,1)}
+@keyframes jolt{0%{transform:scale(1.25) rotate(-3deg)}100%{transform:none}}
+.mult{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:22px;color:var(--sig)}
+.trophy{position:relative;height:150px;border-bottom:3px solid #4a4a52}
+.trophy .t{position:absolute;bottom:0;width:150px;height:62px;border-radius:8px;background:var(--card);color:#16161A;font:800 13px/1.1 Manrope,sans-serif;padding:8px 10px;box-shadow:0 8px 16px rgba(0,0,0,.4);animation:tfall .9s cubic-bezier(.3,0,.5,1) both}
+.trophy .t.gold{background:var(--sig)}
+@keyframes tfall{0%{transform:translateY(-300px) rotate(var(--r))}70%{transform:translateY(0) rotate(var(--rr))}85%{transform:translateY(-8px) rotate(var(--rr))}100%{transform:rotate(var(--rr))}}
+.share{font:700 15px Manrope,sans-serif;padding:14px 16px;border-radius:14px;background:#1d1d22;border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+footer{margin-top:22px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#5d5d66;letter-spacing:.12em;text-transform:uppercase}
+.shake{animation:shk .35s}
+@keyframes shk{20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <span class="mark">osmose</span>
+    <div class="lives" aria-label="3 vies"><i class="life"></i><i class="life"></i><i class="life"></i></div>
+  </header>
+
+  <section class="screen on" id="s1">
+    <span class="over">Défi du 13 nov. · <b>1/3</b> · le casting</span>
+    <h1>Quel album de 1998 réunit ces invités ?</h1>
+    <div class="jarrow">
+      <div class="jar" id="jar" aria-label="Invités dévoilés"></div>
+      <div class="jarside">
+        <span class="potn" id="pot">100</span>
+        <span class="voice" style="font-size:13px">points si tu tires la bonne carte maintenant</span>
+        <button class="drop" type="button" id="drop">Faire tomber un invité · −15</button>
+      </div>
+    </div>
+    <p class="hint"><svg width="16" height="22" viewBox="0 0 16 22" aria-hidden="true"><path d="M8 2v16M2 12l6 6 6-6" stroke="#9B9BA3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Tire la bonne carte vers le bas. Une erreur coupe un fil.</p>
+    <div class="hang" id="hang1"></div>
+    <div class="fb" id="fb1"><p class="say" id="say1"></p><p class="stat">34 % ont tiré la bonne carte · 41 % ont tiré <i>L’Amour est mort</i></p><button class="btn" type="button" data-go="2">Question suivante</button></div>
+  </section>
+
+  <section class="screen" id="s2">
+    <span class="over">Question <b>2/3</b> · le poids</span>
+    <h1>Le 18 juin 2012 à Bercy, combien de fois d’affilée <b>Jay-Z</b> et <b>Kanye West</b> ont-ils joué <i>Ni**as in Paris</i> ?</h1>
+    <p class="voice">Un CD par passage. Empile ta réponse.</p>
+    <div class="counter"><span class="n" id="cnt">0</span><div class="ctl"><button type="button" id="pop">Retirer</button><button type="button" id="add" style="border-color:var(--ink)">Empiler un CD</button></div></div>
+    <div class="stackzone" id="zone" aria-label="Touchez pour empiler un CD"><div class="stack" id="stack"><div class="mark12" id="m12"><span>12 · RECORD DE LA TOURNÉE</span></div></div></div>
+    <button class="btn sig" type="button" id="lock">Poser ma pile</button>
+    <div class="fb" id="fb2"><p class="say" id="say2"></p><p class="stat">9 % ont empilé pile 12 · la plupart se sont arrêtés entre 8 et 10</p><button class="btn" type="button" data-go="3">Question suivante</button></div>
+  </section>
+
+  <section class="screen" id="s3">
+    <span class="over">Question <b>3/3</b> · la pochette</span>
+    <h1>Qui signe la pochette de <i>Deo Favente</i> de <b>SCH</b> ?</h1>
+    <p class="hint"><svg width="16" height="22" viewBox="0 0 16 22" aria-hidden="true"><path d="M8 2v16M2 12l6 6 6-6" stroke="#9B9BA3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Tire le bon nom.</p>
+    <div class="hang" id="hang3"></div>
+    <div class="fb" id="fb3"><p class="say" id="say3"></p><p class="stat">61 % ont tiré Koria · 39 % ont tiré un Fifou</p><button class="btn" type="button" data-go="4">Faire les comptes</button></div>
+  </section>
+
+  <section class="screen" id="s4">
+    <span class="over">Défi du 13 nov. · <b>terminé</b></span>
+    <div><span class="bigscore" id="score">0</span> <span class="mult" id="mult"></span></div>
+    <p class="say" id="pct" style="font-size:20px"></p>
+    <div class="trophy" id="trophy"></div>
+    <div class="share" id="share"></div>
+    <div class="row"><button class="btn" type="button" id="copy">Partager</button><button class="btn ghost" type="button" id="again">Rejouer</button></div>
+  </section>
+
+  <footer><span>Maquette · stats fictives</span><span>La gravité</span></footer>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = (s) => document.querySelector(s);
+const S = { shown: 2, lives: 3, p1: -1, n: 0, locked: false, p3: -1, pts: [0, 0, 0] };
+const buzz = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
+function loseLife() { const l = [...document.querySelectorAll('.life:not(.lost)')].pop(); if (l) l.classList.add('lost'); S.lives--; }
+
+/* ---------- pendules ---------- */
+const pends = [];
+function makeHang(el, items, onPull) {
+  el.innerHTML = '';
+  const W = el.clientWidth;
+  const rows = [{ y: 10, L: 26 }, { y: 190, L: 26 }];
+  rows.forEach((r) => { const rope = document.createElement('div'); rope.className = 'rope'; rope.style.top = r.y + 'px'; el.appendChild(rope); });
+  const list = [];
+  items.forEach((it, i) => {
+    const r = rows[Math.floor(i / 2)];
+    const p = document.createElement('div');
+    p.className = 'pend';
+    const w = W * 0.46;
+    const ax = (i % 2 === 0 ? W * 0.25 : W * 0.75);
+    p.style.left = (ax - w / 2) + 'px'; p.style.top = r.y + 'px';
+    p.innerHTML = '<span class="peg"></span><div class="str" style="height:' + r.L + 'px"></div><div class="crd"><small>' + it.k + '</small><span>' + it.label + '</span></div>';
+    el.appendChild(p);
+    const o = { el: p, str: p.querySelector('.str'), crd: p.querySelector('.crd'), L: r.L, th: (Math.random() - 0.5) * 0.25, om: 0, pull: 0, drag: null, state: 'hang', y: 0, vy: 0, i, ph: Math.random() * 6 };
+    list.push(o); pends.push(o);
+    const crd = o.crd;
+    crd.addEventListener('pointerdown', (e) => { if (o.state !== 'hang' || el.dataset.done) return; crd.setPointerCapture(e.pointerId); o.drag = { x: e.clientX, y: e.clientY }; buzz(5); });
+    crd.addEventListener('pointermove', (e) => {
+      if (!o.drag) return;
+      const dx = e.clientX - o.drag.x, dy = e.clientY - o.drag.y;
+      o.pull = Math.max(0, Math.min(140, dy)); o.th = Math.atan2(dx * 0.6, 120 + o.pull) ; o.om = 0;
+    });
+    const up = () => {
+      if (!o.drag) return; o.drag = null;
+      if (o.pull > 70) { el.dataset.done = '1'; onPull(o, list); }
+      else { o.om = -o.th * 0.05; }
+    };
+    crd.addEventListener('pointerup', up); crd.addEventListener('pointercancel', up);
+    crd.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && !el.dataset.done) { el.dataset.done = '1'; o.pull = 90; onPull(o, list); } });
+    crd.tabIndex = 0; crd.setAttribute('role', 'button');
+  });
+  return list;
+}
+let last = performance.now();
+function physics(now) {
+  const dt = Math.min(32, now - last) / 16.7; last = now;
+  const t = now / 1000;
+  for (const o of pends) {
+    if (o.state === 'fall') {
+      o.vy += 0.9 * dt; o.y += o.vy * dt; o.th += 0.04 * dt;
+      o.el.style.transform = 'translateY(' + o.y + 'px) rotate(' + o.th + 'rad)';
+      o.str.style.opacity = 0;
+      continue;
+    }
+    if (!o.drag) {
+      const wind = Math.sin(t * 0.9 + o.ph) * 0.00035;
+      o.om += (-0.012 * Math.sin(o.th) + wind - 0.035 * o.om) * dt;
+      o.th += o.om * dt;
+      if (o.state === 'hang') o.pull += (0 - o.pull) * 0.18 * dt;
+      if (o.state === 'pinned') o.pull += (-12 - o.pull) * 0.2 * dt;
+    }
+    o.str.style.height = Math.max(8, o.L + o.pull) + 'px';
+    o.el.style.transform = 'rotate(' + o.th + 'rad)';
+  }
+  requestAnimationFrame(physics);
+}
+requestAnimationFrame(physics);
+function resolve(list, chosen, rightIdx) {
+  const ok = chosen.i === rightIdx;
+  list.forEach((o) => {
+    if (o.i === rightIdx) { o.state = 'pinned'; o.el.classList.add('right', 'pinned'); o.om += 0.08; }
+    else if (o === chosen) { o.state = 'fall'; o.el.classList.add('wrong'); o.vy = -6; }
+    else { o.el.style.opacity = 0.35; }
+  });
+  if (ok) buzz([18, 30, 18]); else { buzz([40, 40, 80]); loseLife(); $('#app').classList.add('shake'); setTimeout(() => $('#app').classList.remove('shake'), 400); }
+  return ok;
+}
+
+/* ---------- Q1 ---------- */
+const GUESTS = ['K-reen', 'Pit Baccardi', 'Lino', 'Le Rat Luciano', 'Freeman', 'Akhenaton'];
+const pot = () => Math.max(25, 100 - (S.shown - 2) * 15);
+function addTok(name, i, silent) { const s = document.createElement('span'); s.className = 'tok'; s.textContent = name; s.style.animationDelay = (i * 0.12) + 's'; $('#jar').appendChild(s); if (!silent) buzz(8); }
+GUESTS.slice(0, 2).forEach((g, i) => setTimeout(() => addTok(g, 0, true), 250 + i * 350));
+$('#drop').onclick = () => { if (S.p1 >= 0 || S.shown >= GUESTS.length) return; addTok(GUESTS[S.shown], 0); S.shown++; $('#pot').textContent = pot(); if (S.shown >= GUESTS.length) $('#drop').style.display = 'none'; };
+const H1 = [{ k: 'CARTE 1', label: '<i>L’Amour est mort</i>' }, { k: 'CARTE 2', label: '<i>Opéra Puccino</i>' }, { k: 'CARTE 3', label: '<i>Mauvais Œil</i>' }, { k: 'CARTE 4', label: '<i>Si Dieu veut…</i>' }];
+requestAnimationFrame(() => makeHang($('#hang1'), H1, (o, list) => {
+  const ok = resolve(list, o, 1);
+  S.p1 = o.i; S.pts[0] = ok ? pot() : 0; $('#drop').style.display = 'none';
+  $('#say1').innerHTML = ok ? 'Clac. <i>Opéra Puccino</i>, Oxmo Puccino, 1998. <span class="p">+' + S.pts[0] + '</span>' : 'La carte est tombée. C’était <i>Opéra Puccino</i>, d’Oxmo. Un fil de moins.';
+  setTimeout(() => $('#fb1').classList.add('on'), 500);
+}));
+
+/* ---------- Q2 : la pile ---------- */
+const COLS = ['#FF3B30', '#FFD400', '#3A7BFF', '#EDEDED', '#2EC27E', '#FF7AC6', '#9B5CFF', '#FF8A00'];
+const CH = 19;
+function addCase(cls) {
+  if (S.n >= 20) return;
+  const c = document.createElement('div');
+  c.className = 'case ' + (cls || 'dropin');
+  c.style.bottom = (S.n * CH) + 'px';
+  c.style.setProperty('--r', ((Math.random() - 0.5) * 30) + 'deg');
+  c.style.transform = 'rotate(' + ((Math.random() - 0.5) * 2.4) + 'deg)';
+  c.innerHTML = '<b style="background:' + COLS[S.n % COLS.length] + '"></b>';
+  $('#stack').appendChild(c);
+  S.n++; $('#cnt').textContent = S.n; buzz(10);
+}
+$('#add').onclick = () => { if (!S.locked) addCase(); };
+$('#zone').onclick = (e) => { if (!S.locked && e.target.id !== 'pop') addCase(); };
+$('#pop').onclick = (e) => { e.stopPropagation(); if (S.locked || !S.n) return; const cs = [...document.querySelectorAll('#stack .case')]; cs[cs.length - 1].remove(); S.n--; $('#cnt').textContent = S.n; };
+$('#lock').onclick = () => {
+  if (S.locked) return;
+  S.locked = true; $('#lock').style.display = 'none'; document.querySelector('.counter .ctl').style.visibility = 'hidden';
+  const m = $('#m12'); m.style.bottom = (12 * CH) + 'px'; m.classList.add('on');
+  const d = Math.abs(S.n - 12);
+  if (S.n < 12) { for (let k = S.n; k < 12; k++) { const g = document.createElement('div'); g.className = 'case ghostcase'; g.style.bottom = (k * CH) + 'px'; $('#stack').appendChild(g); } }
+  if (S.n > 12) { const cs = [...document.querySelectorAll('#stack .case:not(.ghostcase)')]; cs.slice(12).forEach((c, k) => setTimeout(() => c.classList.add('extra'), 300 + k * 120)); }
+  S.pts[1] = Math.max(0, 100 - d * 20);
+  if (d > 3) loseLife();
+  buzz(d === 0 ? [20, 30, 20, 30, 60] : 30);
+  $('#say2').innerHTML = d === 0 ? 'Douze CD, pile au trait. <span class="p">+100</span>' : (S.n < 12 ? 'Il manque ' + d + ' CD.' : d + ' CD de trop, ils dégringolent.') + ' C’était 12 fois d’affilée. <span class="p">+' + S.pts[1] + '</span>';
+  setTimeout(() => $('#fb2').classList.add('on'), 700);
+};
+
+/* ---------- Q3 ---------- */
+const H3 = [{ k: 'NOM 1', label: 'Fifou' }, { k: 'NOM 2', label: 'Fifou' }, { k: 'NOM 3', label: 'Koria' }, { k: 'NOM 4', label: 'Fifou' }];
+let built3 = false;
+
+/* ---------- fin ---------- */
+function renderEnd() {
+  const base = S.pts[0] + S.pts[1] + S.pts[2];
+  const mult = S.lives === 3 ? 1.5 : S.lives === 2 ? 1.2 : 1;
+  const final = Math.round(base * mult);
+  const el = $('#score');
+  let shown = 0; const st = performance.now();
+  const step = (now) => {
+    const k = Math.min(1, (now - st) / 1000); const v = Math.round(base * k);
+    if (v !== shown) { shown = v; el.textContent = v; }
+    if (k < 1) requestAnimationFrame(step);
+    else setTimeout(() => { $('#mult').textContent = '× ' + String(mult).replace('.', ',') + ' (fils intacts : ' + S.lives + ')'; el.textContent = final; el.classList.remove('jolt'); void el.offsetWidth; el.classList.add('jolt'); buzz([20, 20, 60]); }, 350);
+  };
+  requestAnimationFrame(step);
+  const pct = Math.max(4, Math.min(98, Math.round(8 + final * 0.22)));
+  $('#pct').textContent = 'Plus lourd que ' + pct + ' % des joueurs aujourd’hui.';
+  const won = [];
+  if (S.pts[0]) won.push(['Opéra Puccino', 'Casting · ' + S.pts[0]]);
+  if (S.pts[1]) won.push([S.n + ' CD empilés', 'Le poids · ' + S.pts[1]]);
+  if (S.pts[2]) won.push(['Koria', 'Pochette · ' + S.pts[2]]);
+  if (!won.length) won.push(['Rien cette fois', 'Demain, ça pèsera plus']);
+  const tw = $('#trophy').clientWidth;
+  $('#trophy').innerHTML = won.map((w, i) => '<div class="t' + (i === won.length - 1 && won.length === 3 ? ' gold' : '') + '" style="left:' + (tw / 2 - 75 + (i - (won.length - 1) / 2) * 70) + 'px;bottom:' + (i % 2) * 40 + 'px;--r:' + ((i - 1) * 20) + 'deg;--rr:' + ((i - 1) * 7) + 'deg;animation-delay:' + (1.4 + i * 0.25) + 's"><b>' + w[0] + '</b><br><span style="font-weight:600;color:#55555d">' + w[1] + '</span></div>').join('');
+  const gl = (p) => (p >= 100 ? '■' : p > 0 ? '◧' : '□');
+  $('#share').textContent = 'osmose n°12  ' + S.pts.map(gl).join(' ') + '  ' + final + ' pts · ' + S.lives + '/3 fils';
+}
+$('#copy').onclick = async () => { try { await navigator.clipboard.writeText($('#share').textContent); $('#copy').textContent = 'Copié'; } catch (e) { $('#copy').textContent = 'Copie impossible ici'; } };
+$('#again').onclick = () => location.reload();
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
+  $('#s' + n).classList.add('on');
+  scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 3 && !built3) {
+    built3 = true;
+    requestAnimationFrame(() => makeHang($('#hang3'), H3, (o, list) => {
+      const ok = resolve(list, o, 2);
+      S.p3 = o.i; S.pts[2] = ok ? 100 : 0;
+      $('#say3').innerHTML = ok ? 'Clac. Koria. Pour une fois, ce n’était pas Fifou. <span class="p">+100</span>' : 'Un Fifou de moins sur le fil. C’était Koria.';
+      setTimeout(() => $('#fb3').classList.add('on'), 500);
+    }));
+  }
+  if (n === 4) renderEnd();
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) go(Number(b.dataset.go)); });
+})();
+</script>
+</body>
+</html>

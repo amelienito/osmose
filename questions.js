@@ -1,0 +1,145 @@
+/* ═══════════════ OSMOSE · LES QUESTIONS ═══════════════
+   Une ligne par question. Pour en ajouter une, copier une ligne du même type.
+
+   type   : qcm · vf · molette · relier · casting
+   cat    : le petit titre au-dessus de la question
+   lvl    : gp (grand public) · init (initié) · dig (digger) : règle la part de la foule qui trouve
+   g      : (facultatif) le sujet, ou une liste de sujets. Deux questions d’un même sujet ne tombent jamais
+            dans la même partie, et après l’une, les autres attendent un peu leur tour
+   q      : la question. <b>nom d’artiste</b>, <i>titre d’œuvre</i>
+   expl   : l’explication affichée après la réponse
+   crowd  : (facultatif) les votes de la foule en %, sinon ils sont tirés selon le niveau
+
+   qcm     : choices (la liste), answer (le numéro de la bonne, en partant de 0), noShuffle (garder l’ordre)
+   vf      : answer true (vrai) ou false (faux)
+   molette : min, max, start (valeur de départ), answer, tol (écart accepté pour « presque »)
+   relier  : pairs ([gauche, droite, sujet]) : quatre paires (ou trois) tirées au sort à chaque partie,
+             jamais en face l’une de l’autre. mot (entre les deux dans l’explication), italR (titres à droite
+             en italique), titres (à gauche : [titre du morceau, artiste])
+   casting : « De quel album viennent ces invités ? » : invites, annee, album, artiste
+             (les trois autres propositions sont tirées parmi les autres castings ; un seul casting par partie)
+*/
+window.OSMOSE_QUESTIONS = [
+
+  /* ───────────── QCM · rap français ───────────── */
+  { id: 'bonus', type: 'qcm', cat: 'Bonus', lvl: 'init', tous: true, noShuffle: true, q: 'J’ai deux passions…', choices: ['La fanfare, la révolution', 'Les blocages et les sabotages', 'Les ZAD et les manif sauvages'], answer: 0, crowd: [38, 31, 31],
+    expl: 'Votez Mélenchon 2027.' },
+  { id: 'libation', type: 'qcm', cat: 'La culture', lvl: 'gp', q: 'Comment appelle-t-on le geste de verser un peu de son récipient au sol en hommage aux morts ?', choices: ['Une libation', 'Une liturgie', 'Une lithologie', 'Un libero'], answer: 0, crowd: [81, 12, 4, 3],
+    expl: 'Une libation. Un rituel antique, repris par le hip-hop pour saluer les disparus.' },
+  { id: 'deo', type: 'qcm', cat: 'La pochette', lvl: 'init', g: 'sch', q: 'Qui signe la pochette de <i>Deo Favente</i> de <b>SCH</b> ?', choices: ['Fifou', 'Fifou', 'Koria', 'Fifou'], answer: 2, crowd: [17, 14, 61, 8], noShuffle: true,
+    explOk: '<b>Koria</b>. Bravo pour l’évitement du piège.', explKo: '<b>Koria</b>. Comme dirait l’autre : t’as tort 3 fois.', expl: '<b>Koria</b>.' },
+  { id: 'mafia', type: 'qcm', cat: 'Les collectifs', lvl: 'init', q: 'Avant de s’appeler la <b>Mafia K’1 Fry</b>, le collectif s’appelait…', choices: ['L’Union', 'Mafia Underground', '94 Clan', 'Tandematik'], answer: 0, crowd: [29, 33, 27, 11],
+    expl: '<b>L’Union</b>. Le nom de <b>Mafia K’1 Fry</b> arrive ensuite, avec <b>Rohff</b>, <b>Kery James</b> et <b>113</b>.' },
+  { id: 'princes', type: 'qcm', cat: 'La discographie', lvl: 'init', g: 'cent13', q: 'Quel groupe a sorti <i>Les Princes de la ville</i> en 1999 ?', choices: ['113', 'Ärsenik', 'Lunatic', 'Expression Direkt'], answer: 0,
+    expl: '<b>113</b>, l’album de <i>Tonton du bled</i>.' },
+  { id: 'kaaris', type: 'qcm', cat: 'Le freestyle', lvl: 'init', g: 'kaaris', q: 'Lors de son premier freestyle Booska-P, quel timecode <b>Kaaris</b> annonce-t-il lui-même ?', choices: ['1 min 23', '1 min 33', '1 min 43', '2 min 43'], answer: 2, crowd: [14, 27, 41, 18], noShuffle: true,
+    expl: '1 min 43. Il l’annonce dans le texte, et tout le monde a vérifié le compteur.' },
+  { id: 'ornoir', type: 'qcm', cat: 'Les pièges', lvl: 'init', g: 'kaaris', q: 'Lequel de ces « noirs » est un album de rap sorti en 2013 ?', choices: ['<i>Or Noir</i>', '<i>Tout simplement noir</i>', '<i>Noir</i>', '<i>Bleu noir</i>'], answer: 0,
+    expl: '<i>Or Noir</i>, le premier album de <b>Kaaris</b>. <i>Tout simplement noir</i> est un film, <i>Bleu noir</i> est un album de <b>Georgio</b>, sorti en 2015, et <i>Noir</i>… n’existe pas.' },
+  { id: 'booba', type: 'qcm', cat: 'La discographie', lvl: 'gp', g: 'booba', q: 'Quel est le premier album solo de <b>Booba</b> ?', choices: ['<i>Temps mort</i>', '<i>Panthéon</i>', '<i>Ouest Side</i>', '<i>0.9</i>'], answer: 0, crowd: [63, 22, 10, 5],
+    expl: '<i>Temps mort</i>, en 2002, après les années <b>Lunatic</b>. <i>Panthéon</i> suit en 2004.' },
+  { id: 'scientific', type: 'qcm', cat: 'Les labels', lvl: 'dig', g: 'booba', q: 'Sur quel label indépendant est sorti <i>Mauvais Œil</i> de <b>Lunatic</b> (2000) ?', choices: ['45 Scientific', 'Time Bomb', 'Secteur Ä', 'Hostile'], answer: 0,
+    expl: '45 Scientific, le label indépendant monté autour de <b>Lunatic</b>.' },
+  { id: 'litho', type: 'qcm', cat: 'Les titres', lvl: 'init', g: 'damso', q: 'Quel album de <b>Damso</b> porte le nom d’un fœtus calcifié ?', choices: ['<i>Lithopédion</i>', '<i>Ipséité</i>', '<i>QALF</i>', '<i>Batterie faible</i>'], answer: 0, crowd: [57, 24, 12, 7],
+    expl: '<i>Lithopédion</i>, en 2018. Le mot désigne un fœtus qui s’est calcifié dans le ventre de sa mère. Ambiance.' },
+  { id: 'jul', type: 'qcm', cat: 'Les labels', lvl: 'gp', g: 'jul', q: 'Comment s’appelle le label indépendant de <b>Jul</b> ?', choices: ['D’or et de platine', '92i', 'Rec. 118', 'Def Jam France'], answer: 0,
+    expl: 'D’or et de platine, le label qu’il a fondé.' },
+  { id: 'talya', type: 'qcm', cat: 'Les clips', lvl: 'dig', q: 'Comment s’appelle le chien qui apparaît dans le clip de <i>Sous la pluie</i> de <b>Djado Mado</b>, sur l’illustre mixtape <i>Seta</i> ?', choices: ['Talya', 'Luna', 'Aya', 'Ursula'], answer: 0,
+    expl: 'Talya. Une apparition remarquée.' },
+  { id: 'lim', type: 'qcm', cat: 'La tracklist', lvl: 'dig', q: 'Sur <i>Enfant du ghetto</i> (2005) de <b>LIM</b>, quel est le titre exact de la piste 14 ?', choices: ['<i>Nique la police</i>', '<i>Nique lui sa mère</i>', '<i>Nique l’État</i>', '<i>Faut qu’on nique tout</i>'], answer: 1, crowd: [34, 18, 20, 28],
+    expl: '<i>Nique lui sa mère</i>, tout simplement.' },
+  { id: 'disiz', type: 'qcm', cat: 'La politique', lvl: 'init', q: 'Au meeting de Charléty, le 1er mai 2007, pour quelle candidate <b>Disiz</b> est-il monté sur scène ?', choices: ['Ségolène Royal', 'Martine Aubry', 'Marine Le Pen', 'Christiane Taubira'], answer: 0,
+    expl: 'Ségolène Royal, candidate socialiste à la présidentielle de 2007.' },
+  { id: 'orelsan', type: 'qcm', cat: 'Les villes', lvl: 'gp', g: 'orelsan', q: 'Où est né <b>Orelsan</b> ?', choices: ['Alençon', 'Caen', 'Lille', 'Cergy'], answer: 0, crowd: [31, 52, 7, 10],
+    expl: 'À Alençon, dans l’Orne. Il a grandi à Caen, d’où le piège.' },
+  { id: 'calbo', type: 'qcm', cat: 'Les duos', lvl: 'init', g: 'arsenik', q: 'Avec qui <b>Lino</b> a-t-il fondé <b>Ärsenik</b>, au début des années 1990 ?', choices: ['Calbo', 'Passi', 'Stomy Bugsy', 'Kery James'], answer: 0,
+    expl: '<b>Calbo</b>, son frère, disparu le 4 janvier 2026, à 53 ans. Deux albums, <i>Quelques gouttes suffisent…</i> (1998) et <i>Quelque chose a survécu</i> (2002), et une place à part dans le rap français.' },
+  { id: 'psy4', type: 'qcm', cat: 'Les groupes', lvl: 'init', g: 'psy4', q: 'Quel groupe réunit <b>Soprano</b>, <b>Alonzo</b>, <b>Vincenzo</b> et <b>Sya Styles</b> ?', choices: ['Psy 4 de la Rime', 'Fonky Family', 'IAM', 'Les Sages Poètes de la Rue'], answer: 0,
+    expl: '<b>Psy 4 de la Rime</b>, des quartiers nord de Marseille.' },
+  { id: 'cercle', type: 'qcm', cat: 'La télé', lvl: 'init', q: 'Quel rappeur a lancé l’émission de freestyles <i>Rentre dans le cercle</i> ?', choices: ['Sofiane', 'Kery James', 'Rohff', 'Mac Tyer'], answer: 0,
+    expl: '<b>Sofiane</b>, alias Fianso, en 2018.' },
+  { id: 'hubert', type: 'qcm', cat: 'Le cinéma', lvl: 'init', g: 'haine', q: 'Dans <i>La Haine</i>, Vinz et Saïd traînent avec…', choices: ['Hubert', 'Karim', 'Momo', 'Sami'], answer: 0,
+    expl: 'Hubert, joué par Hubert Koundé.' },
+
+  /* ───────────── QCM · rap américain ───────────── */
+  { id: 'ross', type: 'qcm', cat: 'Les coulisses', lvl: 'init', g: 'kanye', q: 'Pour quel morceau <b>Kanye West</b> a-t-il fait réécrire son couplet à <b>Rick Ross</b> ?', choices: ['<i>Devil in a New Dress</i>', '<i>Live Fast, Die Young</i>', '<i>Sanctified</i>', '<i>Maybach Music 2</i>'], answer: 0, crowd: [38, 22, 19, 21],
+    expl: '<i>Devil in a New Dress</i>, en 2010. <b>Kanye</b> trouvait le premier jet trop faible, <b>Ross</b> l’a refait, et c’est souvent cité parmi ses meilleurs couplets.' },
+  { id: 'graduation', type: 'qcm', cat: 'La pochette', lvl: 'init', g: 'kanye', q: 'Quel artiste japonais a dessiné la pochette de <i>Graduation</i> de <b>Kanye West</b> (2007) ?', choices: ['Takashi Murakami', 'Yayoi Kusama', 'Hayao Miyazaki', 'Katsuhiro Ōtomo'], answer: 0,
+    expl: 'Takashi Murakami, et son ours en peluche propulsé dans le ciel.' },
+  { id: 'pa', type: 'qcm', cat: 'L’histoire', lvl: 'gp', q: 'Quel artiste a déclenché, sans le vouloir, la création du logo Parental Advisory ?', choices: ['Prince', 'Marilyn Manson', '2 Live Crew', 'Inoxtag'], answer: 0, crowd: [21, 30, 46, 3],
+    expl: '<b>Prince</b>. En entendant <i>Darling Nikki</i>, Tipper Gore fonde en 1985 le comité qui obtiendra l’étiquette.' },
+  { id: 'herc', type: 'qcm', cat: 'L’histoire', lvl: 'gp', g: 'bronx', q: 'Quel DJ passe pour le père du hip-hop, depuis une fête dans le Bronx en 1973 ?', choices: ['DJ Kool Herc', 'Grandmaster Flash', 'Afrika Bambaataa', 'DJ Premier'], answer: 0,
+    expl: '<b>DJ Kool Herc</b>, au 1520 Sedgwick Avenue, en faisant tourner les breaks en boucle.' },
+  { id: 'shkreli', type: 'qcm', cat: 'Le chiffre', lvl: 'init', g: 'wutang', q: 'Combien Martin Shkreli a-t-il payé en 2015 l’unique exemplaire de <i>Once Upon a Time in Shaolin</i> du <b>Wu-Tang Clan</b> ?', choices: ['1 million $', '2 millions $', '3 millions $', '4 millions $'], answer: 1, crowd: [24, 37, 23, 16], noShuffle: true,
+    expl: '2 millions de dollars. Saisi par la justice américaine, l’album a ensuite été revendu environ 2,24 millions.' },
+  { id: 'milliard', type: 'qcm', cat: 'Le business', lvl: 'gp', g: 'jayz', q: 'Quel rappeur Forbes a-t-il désigné comme le premier milliardaire du hip-hop, en 2019 ?', choices: ['Jay-Z', 'Diddy', 'Dr. Dre', 'Kanye West'], answer: 0,
+    expl: '<b>Jay-Z</b> : alcools, art, immobilier, streaming, et un peu de musique.' },
+  { id: 'infinite', type: 'qcm', cat: 'La discographie', lvl: 'dig', g: 'eminem', q: 'Quel est le tout premier album d’<b>Eminem</b>, sorti en 1996 ?', choices: ['<i>Infinite</i>', '<i>The Slim Shady LP</i>', '<i>The Marshall Mathers LP</i>', '<i>Encore</i>'], answer: 0,
+    expl: '<i>Infinite</i>, sur un petit label de Detroit, presque passé inaperçu. <i>The Slim Shady LP</i> arrive en 1999.' },
+  { id: 'pulitzer', type: 'qcm', cat: 'Les récompenses', lvl: 'init', g: 'kendrick', q: 'Quel album de <b>Kendrick Lamar</b> a reçu le prix Pulitzer de musique en 2018 ?', choices: ['<i>DAMN.</i>', '<i>To Pimp a Butterfly</i>', '<i>good kid, m.A.A.d city</i>', '<i>Mr. Morale & the Big Steppers</i>'], answer: 0, crowd: [44, 39, 12, 5],
+    expl: '<i>DAMN.</i>, et non <i>good kid, m.A.A.d city</i>, que beaucoup citent. Une première pour un album qui n’est ni du jazz ni de la musique classique.' },
+  { id: 'doommask', type: 'qcm', cat: 'Les blazes', lvl: 'init', g: 'doom', q: 'Le masque de <b>MF DOOM</b> rend hommage à quel méchant de comics ?', choices: ['Docteur Fatalis', 'Le Bouffon Vert', 'Magnéto', 'Deadpool'], answer: 0,
+    expl: 'Docteur Fatalis, Doctor Doom en VO. Le premier masque venait d’un accessoire du film <i>Gladiator</i>.' },
+  { id: 'degrassi', type: 'qcm', cat: 'Les séries', lvl: 'init', g: 'drake', q: 'Dans quelle série canadienne <b>Drake</b> jouait-il avant de rapper ?', choices: ['<i>Degrassi</i>', '<i>Les Frères Scott</i>', '<i>Smallville</i>', '<i>Instant Star</i>'], answer: 0,
+    expl: '<i>Degrassi : La Nouvelle Génération</i>, dans le rôle de Jimmy Brooks.' },
+  { id: 'c-opera', type: 'casting', lvl: 'init', invites: 'Akhenaton, Freeman, Le Rat Luciano, Pit Baccardi, Lino, K-reen', annee: 1998, album: 'Opéra Puccino', artiste: 'Oxmo Puccino', crowd: [34, 41, 15, 10],
+    expl: '<i>Opéra Puccino</i>, le premier album d’<b>Oxmo Puccino</b>.' },
+  { id: 'c-corleone', type: 'casting', lvl: 'init', invites: 'Amel Bent, Lil Durk, French Montana', annee: 2014, album: 'Corleone', artiste: 'Lacrim',
+    expl: '<i>Corleone</i>, de <b>Lacrim</b>.' },
+  { id: 'c-reperes', type: 'casting', lvl: 'init', invites: 'Soprano, Canardo, Sefyu', annee: 2009, album: 'Mes repères', artiste: 'La Fouine',
+    expl: '<i>Mes repères</i>, de <b>La Fouine</b>.' },
+  { id: 'c-fantome', type: 'casting', lvl: 'init', g: 'cent13', invites: 'SCH, S.Pri Noir, Lartiste, Sadek, AP', annee: 2017, album: 'Fantôme', artiste: 'Rim’K',
+    expl: '<i>Fantôme</i>, de <b>Rim’K</b>. <b>AP</b> en invité : on reste en famille.' },
+  { id: 'dmt', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: 'dmt', q: 'Ce titre d’<b>Action Bronson</b> sample <i>En se prenant par la main</i> de <b>Jean Claudric</b> et porte la formule chimique de la DMT. Comment s’écrit-il exactement ?', choices: ['C12H16N2', 'C12H12N2', 'C12H16N4', 'C12H10N4O2'], answer: 0, crowd: [38, 27, 22, 13],
+    expl: 'C12H16N2, sur <i>Only for Dolphins</i> (2020), produit par <b>Harry Fraud</b>.' },
+  { id: 'amen', type: 'qcm', cat: 'Les samples', lvl: 'init', q: 'D’après WhoSampled, combien de fois <i>Amen, Brother</i> des <b>Winstons</b> a-t-il été samplé (novembre 2026) ?', choices: ['Environ 5 000', 'Environ 6 500', 'Environ 7 800', 'Environ 10 000'], answer: 2, noShuffle: true,
+    expl: 'Environ 7 800 fois. Son break de batterie, l’« Amen break », est l’un des samples les plus utilisés de l’histoire.' },
+  { id: 'waka', type: 'qcm', cat: 'Les clips', lvl: 'dig', q: 'Dans quelle commune <b>Waka Flocka Flame</b>, vêtu d’Ünkut, a-t-il tourné le clip de <i>Where It At</i> ?', choices: ['Aulnay-sous-Bois', 'La Courneuve', 'Sevran', 'Saint-Denis'], answer: 0,
+    expl: 'Aulnay-sous-Bois, devant la caméra de Chris Macari.' },
+
+  /* ───────────── VRAI / FAUX ───────────── */
+  { id: 'avon', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'wire', q: 'Avon Barksdale, que les rappeurs adorent citer, est un personnage des <i>Soprano</i>.', answer: false, crowd: [27, 73],
+    expl: 'Faux. Avon Barksdale, c’est le patron des tours de Baltimore dans <i>The Wire</i>.' },
+  { id: 'kery', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'kery', q: 'Avant sa carrière solo, <b>Kery James</b> faisait partie du groupe <b>Ideal Junior</b>.', answer: true, crowd: [76, 24],
+    expl: 'Vrai. <b>Ideal Junior</b>, avec <b>DJ Mehdi</b> à la production, bien avant <i>Si c’était à refaire</i>.' },
+  { id: 'tyler', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'tyler', q: 'On peut entendre la voix de <b>Tyler, the Creator</b> dans <i>GTA V</i>.', answer: true, crowd: [47, 53],
+    expl: 'Vrai. Il prête sa voix à des passants du jeu, sorti en 2013. Il l’avait annoncé à l’époque, mais les joueurs ne s’en sont rendu compte qu’en 2020.' },
+  { id: 'kerchak', type: 'vf', cat: 'Vrai ou faux', lvl: 'gp', q: 'Le rappeur <b>Kerchak</b> porte le nom d’un personnage du <i>Roi lion</i>.', answer: false,
+    expl: 'Faux. Kerchak, c’est le gorille chef de <i>Tarzan</i> (Disney, 1999).' },
+  { id: 'ecole', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: ['sexion', 'iam'], q: '<i>L’École des ponts vitaux</i> est un album de la <b>Sexion d’Assaut</b>.', answer: false, crowd: [61, 39],
+    expl: 'Faux : c’est <i>L’École des points vitaux</i> (2010). Des points, pas des ponts.' },
+  { id: 'jumeaux', type: 'vf', cat: 'Vrai ou faux', lvl: 'gp', g: 'pnl', q: '<b>Ademo</b> et <b>N.O.S</b>, de <b>PNL</b>, sont jumeaux.', answer: false, crowd: [34, 66],
+    expl: 'Faux : <b>Ademo</b> est l’aîné.' },
+  { id: 'three6', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'oscar', q: 'Le groupe <b>Three 6 Mafia</b> a remporté un Oscar.', answer: true, crowd: [38, 62],
+    expl: 'Vrai, en 2006, pour <i>It’s Hard Out Here for a Pimp</i>, la chanson du film <i>Hustle & Flow</i>.' },
+  { id: 'wuname', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'wutang', q: 'Le <b>Wu-Tang Clan</b> tire son nom d’un film de kung-fu.', answer: true,
+    expl: 'Vrai : <i>Shaolin and Wu Tang</i> (1983), un film de Hong Kong que <b>RZA</b> et <b>GZA</b> regardaient en boucle.' },
+  { id: 'friday', type: 'vf', cat: 'Vrai ou faux', lvl: 'init', g: 'cube', q: '<b>Ice Cube</b> a coécrit le film <i>Friday</i> (1995).', answer: true,
+    expl: 'Vrai, avec <b>DJ Pooh</b>. Il y joue aussi Craig.' },
+  { id: 'nip', type: 'molette', cat: 'Le chiffre', lvl: 'init', g: 'wtt', q: 'Le 18 juin 2012 à Bercy, combien de fois d’affilée <b>Jay-Z</b> et <b>Kanye West</b> ont-ils joué <i>Ni**as in Paris</i> ?', min: 1, max: 15, start: 5, answer: 12, tol: 1,
+    dist: [1, 1, 2, 3, 4, 6, 8, 12, 11, 12, 8, 9, 6, 4, 3], expl: 'Douze fois de suite, le record de la tournée <i>Watch the Throne</i>. Le 1er juin, à Bercy aussi, ils s’étaient arrêtés à onze.' },
+  { id: 'wutang', type: 'molette', cat: 'Le chiffre', lvl: 'gp', g: 'wutang', q: 'Combien de membres compte le <b>Wu-Tang Clan</b> à sa formation ?', min: 3, max: 15, start: 6, answer: 9, tol: 3,
+    dist: [0, 1, 3, 6, 9, 17, 34, 14, 8, 4, 2, 1, 1], expl: 'Neuf : <b>RZA</b>, <b>GZA</b>, <b>Ol’ Dirty Bastard</b>, <b>Method Man</b>, <b>Raekwon</b>, <b>Ghostface Killah</b>, <b>Inspectah Deck</b>, <b>U-God</b> et <b>Masta Killa</b>. <b>Cappadonna</b> arrive plus tard.' },
+  { id: 'diams', type: 'molette', cat: 'L’année', lvl: 'gp', q: 'En quelle année <b>Diam’s</b> a-t-elle sorti <i>Dans ma bulle</i> ?', min: 2000, max: 2012, start: 2004, answer: 2006, tol: 1,
+    expl: '2006, l’album de <i>La Boulette</i>.' },
+  { id: 'biggie', type: 'molette', cat: 'L’année', lvl: 'init', g: 'biggie', q: 'En quelle année sort <i>Ready to Die</i> de <b>The Notorious B.I.G.</b> ?', min: 1988, max: 2002, start: 1996, answer: 1994, tol: 1,
+    expl: '1994, son premier album, le seul paru de son vivant.' },
+  { id: 'mauvaisoeil', type: 'molette', cat: 'L’année', lvl: 'init', g: 'booba', q: 'En quelle année sort <i>Mauvais Œil</i> de <b>Lunatic</b> ?', min: 1994, max: 2008, start: 2003, answer: 2000, tol: 1,
+    expl: '2000, chez 45 Scientific.' },
+  { id: 'illmatic', type: 'molette', cat: 'L’année', lvl: 'init', g: 'nas', q: 'En quelle année sort <i>Illmatic</i> de <b>Nas</b> ?', min: 1988, max: 2002, start: 1998, answer: 1994, tol: 1,
+    expl: '1994. Dix titres, et une place tout en haut de beaucoup de classements.' },
+  { id: 'chronic', type: 'molette', cat: 'L’année', lvl: 'init', g: 'dre', q: 'En quelle année sort <i>The Chronic</i> de <b>Dr. Dre</b> ?', min: 1986, max: 2000, start: 1996, answer: 1992, tol: 1,
+    expl: '1992, chez Death Row.' },
+  { id: '36ch', type: 'molette', cat: 'L’année', lvl: 'init', g: 'wutang', q: 'En quelle année sort <i>Enter the Wu-Tang (36 Chambers)</i> ?', min: 1986, max: 2000, start: 1997, answer: 1993, tol: 1,
+    expl: '1993, le premier album du <b>Wu-Tang Clan</b>.' },
+  { id: 'r-jeux', type: 'relier', cat: 'Les samples', lvl: 'init', q: 'Relie chaque morceau au jeu vidéo qu’il sample.', mot: 'sample', italR: true, titres: true,
+    pairs: [[['Get It Back', 'Gucci Mane'], 'Tetris'], [['6 God', 'Drake'], 'Donkey Kong Country 2', 'drake'], [['Sorry Not Sorry', 'Bryson Tiller'], 'Street Fighter II'], [['Super Brooklyn', 'Cocoa Brovas'], 'Super Mario Bros.']] },
+  { id: 'r-albums', type: 'relier', cat: 'Les albums', lvl: 'gp', q: 'Relie chaque rappeur à son album.', mot: ':', italR: true,
+    pairs: [['Alpha Wann', 'Une main lave l’autre'], ['Lacrim', 'R.I.P.R.O. Volume 1'], ['Dosseh', 'Yuri'], ['Ninho', 'Destin'], ['Rohff', 'La Cuenta'], ['Sofiane', 'Bandit saleté']] },
+  { id: 'r-labels', type: 'relier', cat: 'Les labels', lvl: 'init', q: 'Relie chaque artiste à son label.', mot: ':',
+    pairs: [['Travis Scott', 'Cactus Jack'], ['T.I.', 'Grand Hustle'], ['Wiz Khalifa', 'Taylor Gang'], ['Meek Mill', 'Dreamchasers'], ['J. Cole', 'Dreamville'], ['Diddy', 'Bad Boy'], ['Nicki Minaj', 'Young Money'], ['Lil Wayne', 'Cash Money']] },
+  { id: 'r-groupes-us', type: 'relier', cat: 'Les groupes', lvl: 'init', q: 'Relie chaque rappeur à son groupe.', mot: ':',
+    pairs: [['Big Boi', 'OutKast', 'outkast'], ['Havoc', 'Mobb Deep', 'mobb'], ['Ice Cube', 'N.W.A', 'cube'], ['Q-Tip', 'A Tribe Called Quest', 'atcq'], ['RZA', 'Wu-Tang Clan', 'wutang'], ['Lauryn Hill', 'Fugees', 'fugees'], ['Proof', 'D12', 'eminem']] },
+  { id: 'r-noms', type: 'relier', cat: 'L’état civil', lvl: 'init', q: 'Relie chaque rappeur à son prénom d’état civil.', mot: 's’appelle',
+    pairs: [['Orelsan', 'Aurélien', 'orelsan'], ['Booba', 'Élie', 'booba'], ['Soprano', 'Saïd', 'psy4'], ['Jul', 'Julien', 'jul'], ['Gims', 'Gandhi', 'sexion'], ['Damso', 'William', 'damso'], ['Kaaris', 'Okou', 'kaaris'], ['MC Solaar', 'Claude', 'solaar']] },
+];

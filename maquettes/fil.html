@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Osmose · Le fil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#000;--ink:#fff;--muted:#8c8c8c;--line:#262626;--acc:#7CFFCB;--beat:667ms}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.mono{font-family:'Space Mono',ui-monospace,monospace}
+.app{max-width:640px;margin:0 auto;padding:18px 20px calc(28px + env(safe-area-inset-bottom));min-height:100vh;display:flex;flex-direction:column;position:relative}
+header{display:flex;justify-content:space-between;align-items:center}
+.mark{font-weight:800;font-size:20px;letter-spacing:-.02em;font-stretch:75%}
+.metro{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:5px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .08s}
+.dots i.on{background:var(--acc)}
+.dots i.on:first-child{box-shadow:0 0 12px var(--acc)}
+.screen{display:none;flex-direction:column;gap:20px;flex:1;padding-top:26px}
+.screen.on{display:flex}
+.over{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.over b{color:var(--acc);font-weight:700}
+.q{font-weight:800;font-size:clamp(34px,10vw,58px);line-height:.96;letter-spacing:-.03em;margin:0;font-stretch:80%;min-height:2em}
+.q .w{display:inline-block;opacity:0;transform:translateY(.25em) scale(.9);transition:opacity .12s,transform .25s cubic-bezier(.2,1.6,.4,1)}
+.q .w.in{opacity:1;transform:none}
+.q i{font-style:italic}
+.q .hole{color:var(--acc)}
+.pot{display:flex;align-items:baseline;gap:10px}
+.pot .n{font-family:'Space Mono',monospace;font-weight:700;font-size:40px;line-height:1;color:var(--acc)}
+.pot .l{font-size:14px;color:var(--muted)}
+.ticker{position:relative;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.ticker .track{display:inline-block;font-weight:700;font-size:clamp(30px,9vw,46px);letter-spacing:-.02em;will-change:transform;font-stretch:75%}
+.ticker .track span{margin-right:.5em}
+.ticker .track em{font-style:normal;color:var(--muted);font-family:'Space Mono',monospace;font-size:.42em;vertical-align:.5em;margin-right:.25em}
+.ticker .track .fresh{color:var(--acc)}
+.stop{align-self:stretch;min-height:64px;border-radius:999px;border:2px solid var(--ink);background:var(--ink);color:#000;font:800 22px 'Bricolage Grotesque',sans-serif;cursor:pointer;letter-spacing:-.01em;animation:thump var(--beat) ease-out infinite}
+@keyframes thump{0%{transform:scale(1.04)}30%{transform:scale(1)}}
+.stop:active{transform:scale(.97)}
+.choices{display:flex;flex-direction:column;gap:2px}
+.ch{display:flex;align-items:baseline;gap:12px;background:none;border:none;border-bottom:1px solid var(--line);color:var(--ink);text-align:left;padding:10px 0;cursor:pointer;font:700 clamp(30px,9vw,46px)/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.025em;font-stretch:78%;opacity:0;transform:translateY(-30px);transition:color .2s,opacity .25s}
+.ch.in{animation:drop .35s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes drop{to{opacity:1;transform:none}}
+.ch .k{font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);font-weight:400;letter-spacing:0}
+.ch:hover{color:var(--acc)}
+.ch.right{color:var(--acc)}
+.ch.right .t{animation:pose .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pose{0%{transform:translateY(-8px)}100%{transform:none}}
+.ch.wrong .t{text-decoration:line-through;text-decoration-thickness:4px;color:#ff5c5c}
+.ch.dim{color:#3d3d3d}
+.ch .t{display:inline-block}
+.ch.pulse .t{animation:pl var(--beat) ease-out infinite}
+@keyframes pl{0%{transform:scale(1.035)}35%{transform:none}}
+.fb{display:none;flex-direction:column;gap:14px}
+.fb.on{display:flex}
+.say{font-weight:700;font-size:22px;line-height:1.15;margin:0;letter-spacing:-.01em}
+.say i{font-style:italic}
+.stat{font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);margin:0}
+.next{align-self:flex-start;min-height:54px;border-radius:999px;border:none;background:var(--ink);color:#000;font:800 17px 'Bricolage Grotesque',sans-serif;padding:0 24px;cursor:pointer}
+/* chiffre */
+.counter{display:flex;align-items:center;justify-content:center;gap:16px;user-select:none;touch-action:none;cursor:ew-resize}
+.counter .num{font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(120px,40vw,200px);line-height:.85;letter-spacing:-.08em;color:var(--acc)}
+.counter button{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);background:none;color:var(--ink);font:700 26px/1 'Space Mono',monospace;cursor:pointer}
+.scrub{text-align:center;font-size:13px;color:var(--muted)}
+.chant{display:flex;flex-direction:column;gap:0;max-height:52vh;overflow:hidden}
+.chant div{display:flex;align-items:baseline;gap:10px;font-weight:800;font-size:clamp(20px,6vw,30px);line-height:1.08;letter-spacing:-.02em;font-stretch:75%;animation:line .18s ease-out both;white-space:nowrap}
+.chant div em{font-family:'Space Mono',monospace;font-style:normal;font-size:12px;color:var(--muted);width:24px;flex-shrink:0}
+.chant div.me{color:var(--acc)}
+.chant div.me::after{content:'← toi';font-family:'Space Mono',monospace;font-size:12px;margin-left:6px}
+.chant div.rec{color:#000;background:var(--acc);padding:2px 6px}
+.chant div.over12{color:#ff5c5c;opacity:.75}
+@keyframes line{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+/* fin */
+.verse{display:flex;flex-direction:column;gap:6px}
+.verse p{margin:0;font-weight:700;font-size:clamp(22px,6.4vw,32px);line-height:1.08;letter-spacing:-.02em;font-stretch:82%}
+.verse p .w{opacity:0;display:inline-block;transform:translateY(.2em)}
+.verse p .w.in{opacity:1;transform:none;transition:opacity .1s,transform .2s cubic-bezier(.2,1.6,.4,1)}
+.verse p b{color:var(--acc);font-weight:800}
+.score{font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(64px,20vw,110px);line-height:.85;letter-spacing:-.06em}
+.share{font-family:'Space Mono',monospace;font-size:14px;line-height:1.6;border:1px solid var(--line);border-radius:12px;padding:14px;white-space:pre-wrap}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.ghost{background:none;color:var(--ink);border:2px solid var(--line)}
+footer{margin-top:24px;display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.06em}
+.flashbg{position:fixed;inset:0;pointer-events:none;background:var(--acc);opacity:0;z-index:0}
+.flashbg.go{animation:fl .4s ease-out}
+@keyframes fl{0%{opacity:.12}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.stop,.ch.pulse .t{animation:none}}
+</style>
+</head>
+<body>
+<div class="flashbg" id="flash"></div>
+<div class="app">
+  <header>
+    <span class="mark">osmose</span>
+    <span class="metro mono"><span>90 BPM</span><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></span>
+  </header>
+
+  <section class="screen on" id="s1">
+    <span class="over">Défi du 13 nov. · <b>1/3</b> · le casting</span>
+    <h1 class="q" id="q1"></h1>
+    <div class="pot"><span class="n" id="pot">100</span><span class="l">points en jeu. Un invité de plus à chaque mesure : arrête le défilé dès que tu sais.</span></div>
+    <div class="ticker"><div class="track" id="track"></div></div>
+    <button class="stop" type="button" id="stop">Stop, je sais</button>
+    <div class="choices" id="c1"></div>
+    <div class="fb" id="fb1">
+      <p class="say" id="say1"></p>
+      <p class="stat">34 % ont trouvé · 41 % ont dit <i>L’Amour est mort</i></p>
+      <button class="next" type="button" data-go="2">Mesure suivante</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s2">
+    <span class="over">Question <b>2/3</b> · le chiffre</span>
+    <h1 class="q" id="q2"></h1>
+    <div class="counter" id="counter">
+      <button type="button" id="minus" aria-label="Moins un">−</button>
+      <span class="num" id="num">06</span>
+      <button type="button" id="plus" aria-label="Plus un">+</button>
+    </div>
+    <p class="scrub" id="scrubHint">Glisse sur le chiffre ou utilise − et +.</p>
+    <button class="stop" type="button" id="lock" style="animation:none">Lancer le décompte</button>
+    <div class="chant" id="chant"></div>
+    <div class="fb" id="fb2">
+      <p class="say" id="say2"></p>
+      <p class="stat">9 % pile · la foule a surtout dit entre 8 et 10</p>
+      <button class="next" type="button" data-go="3">Mesure suivante</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s3">
+    <span class="over">Question <b>3/3</b> · la pochette</span>
+    <h1 class="q" id="q3"></h1>
+    <div class="choices" id="c3"></div>
+    <div class="fb" id="fb3">
+      <p class="say" id="say3"></p>
+      <p class="stat">61 % ont trouvé · 39 % ont dit Fifou par réflexe</p>
+      <button class="next" type="button" data-go="4">Écouter mon couplet</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s4">
+    <span class="over">Défi du 13 nov. · <b>ton couplet</b></span>
+    <div class="verse" id="verse"></div>
+    <div class="row" style="align-items:baseline;gap:14px"><span class="score" id="score">0</span><span class="mono" style="color:var(--muted)">/ 300</span></div>
+    <div class="share" id="share"></div>
+    <div class="row"><button class="next" type="button" id="copy">Partager</button><button class="next ghost" type="button" id="again">Rejouer</button></div>
+  </section>
+
+  <footer><span>Maquette · stats fictives</span><span>Le fil</span></footer>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = (s) => document.querySelector(s);
+const BEAT = 667;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root = document.documentElement;
+const S = { shown: 2, stopped: false, p1: -1, val: 6, locked: false, p3: -1, pts: [0, 0, 0] };
+
+/* ---------- métronome ---------- */
+const t0 = performance.now();
+let beat = -1;
+const queue = [];
+function at(beatIndex, fn) { queue.push({ b: beatIndex, fn }); }
+const nowBeat = () => Math.floor((performance.now() - t0) / BEAT);
+function onNext(n, fn) { at(nowBeat() + n, fn); }
+function tick() {
+  const b = nowBeat();
+  if (b !== beat) {
+    beat = b;
+    const dots = $('#dots').children;
+    for (let i = 0; i < 4; i++) dots[i].classList.toggle('on', i === b % 4);
+    if (b % 4 === 0 && !reduce) { const f = $('#flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+    for (let i = queue.length - 1; i >= 0; i--) if (queue[i].b <= b) { const q = queue.splice(i, 1)[0]; q.fn(); }
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* écrit une phrase mot à mot, un mot par temps (ou demi-temps) */
+function typeOn(el, html, startIn = 1, half = false) {
+  const tmp = document.createElement('div'); tmp.innerHTML = html;
+  const words = [];
+  const walk = (node, wrap) => {
+    node.childNodes.forEach((c) => {
+      if (c.nodeType === 3) c.textContent.split(/(\s+)/).forEach((p) => { if (p.trim()) words.push(wrap(p)); else if (p) words.push(' '); });
+      else walk(c, (p) => wrap('<' + c.tagName.toLowerCase() + (c.className ? ' class="' + c.className + '"' : '') + '>' + p + '</' + c.tagName.toLowerCase() + '>'));
+    });
+  };
+  walk(tmp, (p) => p);
+  el.innerHTML = words.map((w) => (w === ' ' ? ' ' : '<span class="w">' + w + '</span>')).join('');
+  const spans = [...el.querySelectorAll('.w')];
+  if (reduce) { spans.forEach((s) => s.classList.add('in')); return 0; }
+  const b0 = nowBeat() + startIn;
+  spans.forEach((s, i) => {
+    const target = half ? b0 + Math.floor(i / 2) : b0 + i;
+    const delay = half && i % 2 ? BEAT / 2 : 0;
+    at(target, () => setTimeout(() => s.classList.add('in'), delay));
+  });
+  return half ? Math.ceil(spans.length / 2) : spans.length;
+}
+const setAcc = (c) => root.style.setProperty('--acc', c);
+
+/* ---------- Q1 : le défilé des invités ---------- */
+const GUESTS = ['K-reen', 'Pit Baccardi', 'Lino', 'Le Rat Luciano', 'Freeman', 'Akhenaton'];
+const O1 = ['L’Amour est mort', 'Opéra Puccino', 'Mauvais Œil', 'Si Dieu veut…'];
+let x = 0, speed = 1.1, tickerOn = true;
+const pot = () => Math.max(25, 100 - (S.shown - 2) * 15);
+function renderTrack(fresh) {
+  const one = GUESTS.slice(0, S.shown).map((g, i) => '<span' + (i === fresh ? ' class="fresh"' : '') + '><em>feat.</em>' + g + '</span>').join('');
+  $('#track').innerHTML = one + one + one;
+  $('#pot').textContent = pot();
+}
+renderTrack();
+function runTicker() {
+  if (!tickerOn) return;
+  const tr = $('#track'); const w = tr.scrollWidth / 3;
+  x -= speed; if (-x > w) x += w;
+  tr.style.transform = 'translateX(' + x + 'px)';
+  requestAnimationFrame(runTicker);
+}
+requestAnimationFrame(runTicker);
+const n1 = typeOn($('#q1'), 'Quel album de <span class="hole">1998</span> réunit ces invités ?', 1);
+function addGuestEveryBar() {
+  if (S.stopped || S.shown >= GUESTS.length) return;
+  at(nowBeat() + 4, () => { if (S.stopped) return; S.shown++; speed += 0.45; renderTrack(S.shown - 1); addGuestEveryBar(); });
+}
+at(nowBeat() + n1 + 2, addGuestEveryBar);
+function dropChoices(el, items, cls, onPick) {
+  el.innerHTML = items.map((t, i) => '<button class="ch ' + cls + '" type="button" data-i="' + i + '"><span class="k">0' + (i + 1) + '</span><span class="t">' + t + '</span></button>').join('');
+  [...el.children].forEach((b, i) => onNext(1 + i, () => b.classList.add('in')));
+  el.onclick = (e) => { const b = e.target.closest('.ch'); if (!b || el.dataset.done) return; el.dataset.done = '1'; onPick(Number(b.dataset.i)); };
+}
+$('#stop').onclick = () => {
+  if (S.stopped) return;
+  S.stopped = true; speed = 0.35; $('#stop').style.display = 'none';
+  dropChoices($('#c1'), O1.map((o) => '<i>' + o + '</i>'), '', (i) => {
+    S.p1 = i; const ok = i === 1;
+    [...$('#c1').children].forEach((b, k) => b.classList.add(k === 1 ? 'right' : k === i ? 'wrong' : 'dim'));
+    S.pts[0] = ok ? pot() : 0;
+    if (!ok) $('#c1').classList.add('shake');
+    onNext(1, () => { $('#fb1').classList.add('on'); typeOn($('#say1'), ok ? 'Sur le temps. <i>Opéra Puccino</i>, Oxmo, 1998. +' + S.pts[0] : 'À contretemps. C’était <i>Opéra Puccino</i>, d’Oxmo.', 0, true); });
+  });
+};
+
+/* ---------- Q2 : le décompte ---------- */
+function setVal(v) { if (S.locked) return; S.val = Math.max(1, Math.min(20, v)); $('#num').textContent = String(S.val).padStart(2, '0'); }
+$('#minus').onclick = () => setVal(S.val - 1);
+$('#plus').onclick = () => setVal(S.val + 1);
+(() => {
+  const c = $('#num'); let sx = null, sv = 0;
+  c.addEventListener('pointerdown', (e) => { if (S.locked) return; sx = e.clientX; sv = S.val; c.setPointerCapture(e.pointerId); });
+  c.addEventListener('pointermove', (e) => { if (sx === null) return; setVal(sv + Math.round((e.clientX - sx) / 28)); });
+  c.addEventListener('pointerup', () => { sx = null; });
+})();
+$('#lock').onclick = () => {
+  if (S.locked) return;
+  S.locked = true; $('#lock').style.display = 'none'; $('#scrubHint').style.display = 'none';
+  $('#minus').style.visibility = 'hidden'; $('#plus').style.visibility = 'hidden';
+  const total = Math.max(12, S.val);
+  const ch = $('#chant'); ch.innerHTML = '';
+  const b0 = nowBeat() + 1;
+  for (let i = 1; i <= total; i++) {
+    const tb = b0 + Math.floor((i - 1) / 2), half = (i - 1) % 2;
+    at(tb, () => setTimeout(() => {
+      const d = document.createElement('div');
+      d.innerHTML = '<em>' + String(i).padStart(2, '0') + '</em><span>Ni**as in Paris</span>';
+      if (i === 12) d.classList.add('rec');
+      else if (i > 12) d.classList.add('over12');
+      if (i === S.val) d.classList.add('me');
+      ch.appendChild(d); ch.scrollTop = ch.scrollHeight;
+      if (navigator.vibrate) navigator.vibrate(i === 12 ? 40 : 6);
+    }, half ? BEAT / 2 : 0));
+  }
+  const endB = b0 + Math.ceil(total / 2) + 1;
+  const dd = Math.abs(S.val - 12);
+  S.pts[1] = Math.max(0, 100 - dd * 20);
+  at(endB, () => { $('#fb2').classList.add('on'); typeOn($('#say2'), dd === 0 ? 'Douze fois. Pile sur le record. +100' : 'Tu t’es arrêté à ' + S.val + '. Bercy, lui, est allé jusqu’à douze. +' + S.pts[1], 0, true); });
+};
+
+/* ---------- Q3 ---------- */
+const O3 = ['Fifou', 'Fifou', 'Koria', 'Fifou'];
+
+/* ---------- fin ---------- */
+function verse() {
+  const sc = S.pts[0] + S.pts[1] + S.pts[2];
+  const pct = Math.max(4, Math.min(98, Math.round(8 + sc * 0.3)));
+  const d = Math.abs(S.val - 12);
+  const L = [
+    S.p1 === 1 ? 'J’ai reconnu <b>Opéra Puccino</b> en ' + S.shown + ' invités,' : 'J’ai pris un Oxmo pour un autre, <b>Opéra Puccino</b> m’a échappé,',
+    d === 0 ? 'douze fois le même morceau, j’avais le compte exact,' : 'j’ai dit ' + S.val + ' pour Bercy, c’était <b>douze</b>, écart de ' + d + ',',
+    S.p3 === 2 ? 'sur la pochette c’est <b>Koria</b>, pas Fifou, je l’savais,' : 'j’ai dit Fifou par réflexe, c’était <b>Koria</b>, c’est noté,',
+    '<b>' + sc + '</b> sur 300, devant ' + pct + ' % des joueurs du jour.'
+  ];
+  const v = $('#verse'); v.innerHTML = L.map(() => '<p></p>').join('');
+  let start = 1;
+  [...v.children].forEach((p, i) => { const n = typeOn(p, L[i], start, true); start += n + 1; });
+  at(nowBeat() + start, () => {
+    const st = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - st) / 900); $('#score').textContent = Math.round(sc * k); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  const gl = (p) => (p >= 100 ? '●' : p > 0 ? '◐' : '○');
+  $('#share').textContent = 'osmose · défi n°12 · ♩ 90\n' + S.pts.map(gl).join(' ') + '  ' + sc + ' pts · devant ' + pct + ' %';
+}
+$('#copy').onclick = async () => { try { await navigator.clipboard.writeText($('#share').textContent); $('#copy').textContent = 'Copié'; } catch (e) { $('#copy').textContent = 'Copie impossible ici'; } };
+$('#again').onclick = () => location.reload();
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
+  $('#s' + n).classList.add('on');
+  scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 2) { tickerOn = false; setAcc('#FFE14D'); typeOn($('#q2'), 'Le 18 juin 2012 à Bercy, combien de fois d’affilée Jay-Z et Kanye West ont-ils joué <i>Ni**as in Paris</i> ?', 1, true); }
+  if (n === 3) {
+    setAcc('#FF4FD8');
+    const k = typeOn($('#q3'), 'Qui signe la pochette de <i>Deo Favente</i> de SCH ?', 1, true);
+    at(nowBeat() + k + 1, () => dropChoices($('#c3'), O3, 'pulse', (i) => {
+      S.p3 = i; const ok = i === 2;
+      [...$('#c3').children].forEach((b, j) => { b.classList.remove('pulse'); b.classList.add(j === 2 ? 'right' : j === i ? 'wrong' : 'dim'); });
+      S.pts[2] = ok ? 100 : 0;
+      if (!ok) $('#c3').classList.add('shake');
+      onNext(1, () => { $('#fb3').classList.add('on'); typeOn($('#say3'), ok ? 'Koria. Pour une fois, ce n’était pas Fifou. +100' : 'Fifou, Fifou, Fifou… et non : Koria.', 0, true); });
+    }));
+  }
+  if (n === 4) { setAcc('#7CFFCB'); verse(); }
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) go(Number(b.dataset.go)); });
+})();
+</script>
+</body>
+</html>
