@@ -7,7 +7,7 @@
    g      : (facultatif) le sujet, ou une liste de sujets. Deux questions d’un même sujet ne tombent jamais
             dans la même partie, et après l’une, les autres attendent un peu leur tour
    q      : la question. <b>nom d’artiste</b>, <i>titre d’œuvre</i>
-   expl   : l’explication affichée après la réponse
+   expl   : l’explication affichée après la réponse (une phrase, ou une liste : une ligne par élément)
    crowd  : (facultatif) les votes de la foule en %, sinon ils sont tirés selon le niveau
 
    qcm     : choices (la liste), answer (le numéro de la bonne, en partant de 0), noShuffle (garder l’ordre)
@@ -22,20 +22,20 @@
 window.OSMOSE_QUESTIONS = [
 
   /* ───────────── QCM · rap français ───────────── */
-  { id: 'bonus', type: 'qcm', cat: 'Bonus', lvl: 'init', tous: true, noShuffle: true, q: 'J’ai deux passions…', choices: ['La fanfare, la révolution', 'Les blocages et les sabotages', 'Les ZAD et les manif sauvages'], answer: 0, crowd: [38, 31, 31],
+  { id: 'bonus', type: 'qcm', cat: 'Bonus', lvl: 'init', tous: true, noShuffle: true, q: 'J’ai deux passions…', choices: ['La fanfare, la révolution', 'Les blocages et les sabotages', 'Les ZAD et les manifs sauvages'], answer: 0, crowd: [38, 31, 31],
     expl: 'Votez Mélenchon 2027.' },
   { id: 'libation', type: 'qcm', cat: 'La culture', lvl: 'gp', q: 'Comment appelle-t-on le geste de verser un peu de son récipient au sol en hommage aux morts ?', choices: ['Une libation', 'Une liturgie', 'Une lithologie', 'Un libero'], answer: 0, crowd: [81, 12, 4, 3],
     expl: 'Une libation. Un rituel antique, repris par le hip-hop pour saluer les disparus.' },
-  { id: 'deo', type: 'qcm', cat: 'La pochette', lvl: 'init', g: 'sch', q: 'Qui signe la pochette de <i>Deo Favente</i> de <b>SCH</b> ?', choices: ['Fifou', 'Fifou', 'Koria', 'Fifou'], answer: 2, crowd: [17, 14, 61, 8], noShuffle: true,
+  { id: 'deo', type: 'qcm', cat: 'La pochette', lvl: 'init', g: 'sch', q: 'Qui signe la pochette de <i>Deo Favente</i> de <b>SCH</b> ?', choices: ['Fifou', 'Fifou', 'Koria', 'Fifou'], answer: 2, crowd: [31, 27, 15, 27], noShuffle: true,
     explOk: '<b>Koria</b>. Bravo pour l’évitement du piège.', explKo: '<b>Koria</b>. Comme dirait l’autre : t’as tort 3 fois.', expl: '<b>Koria</b>.' },
   { id: 'mafia', type: 'qcm', cat: 'Les collectifs', lvl: 'init', q: 'Avant de s’appeler la <b>Mafia K’1 Fry</b>, le collectif s’appelait…', choices: ['L’Union', 'Mafia Underground', '94 Clan', 'Tandematik'], answer: 0, crowd: [29, 33, 27, 11],
     expl: '<b>L’Union</b>. Le nom de <b>Mafia K’1 Fry</b> arrive ensuite, avec <b>Rohff</b>, <b>Kery James</b> et <b>113</b>.' },
   { id: 'princes', type: 'qcm', cat: 'La discographie', lvl: 'init', g: 'cent13', q: 'Quel groupe a sorti <i>Les Princes de la ville</i> en 1999 ?', choices: ['113', 'Ärsenik', 'Lunatic', 'Expression Direkt'], answer: 0,
     expl: '<b>113</b>, l’album de <i>Tonton du bled</i>.' },
-  { id: 'kaaris', type: 'qcm', cat: 'Le freestyle', lvl: 'init', g: 'kaaris', q: 'Lors de son premier freestyle Booska-P, quel timecode <b>Kaaris</b> annonce-t-il lui-même ?', choices: ['1 min 23', '1 min 33', '1 min 43', '2 min 43'], answer: 2, crowd: [14, 27, 41, 18], noShuffle: true,
+  { id: 'kaaris', type: 'qcm', cat: 'Le freestyle', lvl: 'init', g: 'kaaris', q: 'Lors de son premier freestyle Booska-P, quel timecode <b>Kaaris</b> annonce-t-il lui-même ?', choices: ['1 min 23', '1 min 33', '1 min 43', '1 min 53'], answer: 2, crowd: [16, 29, 34, 21], noShuffle: true,
     expl: '1 min 43. Il l’annonce dans le texte, et tout le monde a vérifié le compteur.' },
-  { id: 'ornoir', type: 'qcm', cat: 'Les pièges', lvl: 'init', g: 'kaaris', q: 'Lequel de ces « noirs » est un album de rap sorti en 2013 ?', choices: ['<i>Or Noir</i>', '<i>Tout simplement noir</i>', '<i>Noir</i>', '<i>Bleu noir</i>'], answer: 0,
-    expl: '<i>Or Noir</i>, le premier album de <b>Kaaris</b>. <i>Tout simplement noir</i> est un film, <i>Bleu noir</i> est un album de <b>Georgio</b>, sorti en 2015, et <i>Noir</i>… n’existe pas.' },
+  { id: 'ornoir', type: 'qcm', cat: 'Les pièges', lvl: 'init', g: 'kaaris', q: 'Lequel de ces « noirs » est sorti en 2013 ?', choices: ['<i>Or Noir</i>', '<i>Ceinture noire</i>', '<i>Bleu noir</i>', '<i>Le Roi des Juifs est noir et il mange chez Al-Haèche</i>'], answer: 0, crowd: [46, 22, 24, 8],
+    expl: ['<i>Or Noir</i> de <b>Kaaris</b>, 2013', '<i>Bleu noir</i> de <b>Georgio</b>, 2015', '<i>Ceinture noire</i> de <b>Gims</b>, 2018', '<i>Le Roi des Juifs est noir et il mange chez Al-Haèche</i> de <b>Despo Rutti</b>, 2018'] },
   { id: 'booba', type: 'qcm', cat: 'La discographie', lvl: 'gp', g: 'booba', q: 'Quel est le premier album solo de <b>Booba</b> ?', choices: ['<i>Temps mort</i>', '<i>Panthéon</i>', '<i>Ouest Side</i>', '<i>0.9</i>'], answer: 0, crowd: [63, 22, 10, 5],
     expl: '<i>Temps mort</i>, en 2002, après les années <b>Lunatic</b>. <i>Panthéon</i> suit en 2004.' },
   { id: 'scientific', type: 'qcm', cat: 'Les labels', lvl: 'dig', g: 'booba', q: 'Sur quel label indépendant est sorti <i>Mauvais Œil</i> de <b>Lunatic</b> (2000) ?', choices: ['45 Scientific', 'Time Bomb', 'Secteur Ä', 'Hostile'], answer: 0,
@@ -58,8 +58,8 @@ window.OSMOSE_QUESTIONS = [
     expl: '<b>Psy 4 de la Rime</b>, des quartiers nord de Marseille.' },
   { id: 'cercle', type: 'qcm', cat: 'La télé', lvl: 'init', q: 'Quel rappeur a lancé l’émission de freestyles <i>Rentre dans le cercle</i> ?', choices: ['Sofiane', 'Kery James', 'Rohff', 'Mac Tyer'], answer: 0,
     expl: '<b>Sofiane</b>, alias Fianso, en 2018.' },
-  { id: 'hubert', type: 'qcm', cat: 'Le cinéma', lvl: 'init', g: 'haine', q: 'Dans <i>La Haine</i>, Vinz et Saïd traînent avec…', choices: ['Hubert', 'Karim', 'Momo', 'Sami'], answer: 0,
-    expl: 'Hubert, joué par Hubert Koundé.' },
+  { id: 'hubert', type: 'qcm', cat: 'Le cinéma', lvl: 'init', g: 'haine', q: 'Dans <i>La Haine</i>, le trio, c’est Hubert, Vinz et…', choices: ['Saïd', 'Samir', 'Nordine', 'Santo'], answer: 0, crowd: [72, 11, 10, 7],
+    expl: 'Saïd, joué par Saïd Taghmaoui. (Les noms proviennent du film, je suis pas juste raciste.)' },
 
   /* ───────────── QCM · rap américain ───────────── */
   { id: 'ross', type: 'qcm', cat: 'Les coulisses', lvl: 'init', g: 'kanye', q: 'Pour quel morceau <b>Kanye West</b> a-t-il fait réécrire son couplet à <b>Rick Ross</b> ?', choices: ['<i>Devil in a New Dress</i>', '<i>Live Fast, Die Young</i>', '<i>Sanctified</i>', '<i>Maybach Music 2</i>'], answer: 0, crowd: [38, 22, 19, 21],
@@ -76,7 +76,7 @@ window.OSMOSE_QUESTIONS = [
     expl: '<b>Jay-Z</b> : alcools, art, immobilier, streaming, et un peu de musique.' },
   { id: 'infinite', type: 'qcm', cat: 'La discographie', lvl: 'dig', g: 'eminem', q: 'Quel est le tout premier album d’<b>Eminem</b>, sorti en 1996 ?', choices: ['<i>Infinite</i>', '<i>The Slim Shady LP</i>', '<i>The Marshall Mathers LP</i>', '<i>Encore</i>'], answer: 0,
     expl: '<i>Infinite</i>, sur un petit label de Detroit, presque passé inaperçu. <i>The Slim Shady LP</i> arrive en 1999.' },
-  { id: 'pulitzer', type: 'qcm', cat: 'Les récompenses', lvl: 'init', g: 'kendrick', q: 'Quel album de <b>Kendrick Lamar</b> a reçu le prix Pulitzer de musique en 2018 ?', choices: ['<i>DAMN.</i>', '<i>To Pimp a Butterfly</i>', '<i>good kid, m.A.A.d city</i>', '<i>Mr. Morale & the Big Steppers</i>'], answer: 0, crowd: [44, 39, 12, 5],
+  { id: 'pulitzer', type: 'qcm', cat: 'Les récompenses', lvl: 'init', g: 'kendrick', q: 'Quel album de <b>Kendrick Lamar</b> a reçu le prix Pulitzer de musique en 2018 ?', choices: ['<i>DAMN.</i>', '<i>To Pimp a Butterfly</i>', '<i>good kid, m.A.A.d city</i>', '<i>Mr. Morale & the Big Steppers</i>'], answer: 0, crowd: [21, 29, 43, 7],
     expl: '<i>DAMN.</i>, et non <i>good kid, m.A.A.d city</i>, que beaucoup citent. Une première pour un album qui n’est ni du jazz ni de la musique classique.' },
   { id: 'doommask', type: 'qcm', cat: 'Les blazes', lvl: 'init', g: 'doom', q: 'Le masque de <b>MF DOOM</b> rend hommage à quel méchant de comics ?', choices: ['Docteur Fatalis', 'Le Bouffon Vert', 'Magnéto', 'Deadpool'], answer: 0,
     expl: 'Docteur Fatalis, Doctor Doom en VO. Le premier masque venait d’un accessoire du film <i>Gladiator</i>.' },
@@ -90,8 +90,14 @@ window.OSMOSE_QUESTIONS = [
     expl: '<i>Mes repères</i>, de <b>La Fouine</b>.' },
   { id: 'c-fantome', type: 'casting', lvl: 'init', g: 'cent13', invites: 'SCH, S.Pri Noir, Lartiste, Sadek, AP', annee: 2017, album: 'Fantôme', artiste: 'Rim’K',
     expl: '<i>Fantôme</i>, de <b>Rim’K</b>. <b>AP</b> en invité : on reste en famille.' },
-  { id: 'dmt', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: 'dmt', q: 'Ce titre d’<b>Action Bronson</b> sample <i>En se prenant par la main</i> de <b>Jean Claudric</b> et porte la formule chimique de la DMT. Comment s’écrit-il exactement ?', choices: ['C12H16N2', 'C12H12N2', 'C12H16N4', 'C12H10N4O2'], answer: 0, crowd: [38, 27, 22, 13],
+  { id: 'dmt', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['dmt', 'ortho'], q: 'Ce titre d’<b>Action Bronson</b> sample <i>En se prenant par la main</i> de <b>Jean Claudric</b> et porte la formule chimique de la DMT. Comment s’écrit-il exactement ?', choices: ['C12H16N6', 'C16H12N2', 'C16H12N6', 'C12H16N2'], answer: 3, crowd: [22, 27, 13, 38],
     expl: 'C12H16N2, sur <i>Only for Dolphins</i> (2020), produit par <b>Harry Fraud</b>.' },
+  { id: 'nqnt', type: 'qcm', cat: 'L’orthographe', lvl: 'init', g: ['vald', 'ortho'], q: 'En 2012, <b>Vald</b> sort une première mixtape au titre imprononçable. Comment s’écrit-il exactement ?', choices: ['NQNTMQMQMB', 'NQNTMQMQB', 'NQTNMQMQMB', 'NQNTMQMMQB'], answer: 0, crowd: [34, 25, 19, 22],
+    expl: 'NQNTMQMQMB, pour « Ni Queue Ni Tête Mais Qui Met Quand Même Bien ». Dix lettres, il suffisait de compter.' },
+  { id: 'cdglax', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['nekfeu', 'ortho'], q: '<b>Nekfeu</b> casse la tête à tout le monde avec ce titre d’<i>Expansion</i>. Comment s’écrit-il exactement ?', choices: ['CDGLAXJFKHNDATH', 'CDGJFKLAXHNDATH', 'CDGLAXJFKNRTATH', 'CDGLAXJFKHNDAHT'], answer: 0, crowd: [31, 26, 24, 19],
+    expl: 'CDGLAXJFKHNDATH : cinq codes d’aéroport collés. Paris, Los Angeles, New York, Tokyo, Athènes.' },
+  { id: 'nmi', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['solaar', 'ortho'], q: 'Sur <i>Prose combat</i>, <b>MC Solaar</b> invite <b>Ménélik</b> et les <b>Sages Poètes de la Rue</b> sur un titre à lire à voix haute. Comment s’écrit-il exactement ?', choices: ['L’NMIACCd’HTCK72KPDP', 'L’NMIACd’HTCK72KPDP', 'L’NMIACCd’HTK72KPDP', 'L’NMIACCd’HTCK27KPDP'], answer: 0, crowd: [29, 27, 24, 20],
+    expl: 'L’NMIACCd’HTCK72KPDP. À voix haute : « L’ennemi a cessé d’acheter ses cassettes de cape et d’épée ».' },
   { id: 'amen', type: 'qcm', cat: 'Les samples', lvl: 'init', q: 'D’après WhoSampled, combien de fois <i>Amen, Brother</i> des <b>Winstons</b> a-t-il été samplé (novembre 2026) ?', choices: ['Environ 5 000', 'Environ 6 500', 'Environ 7 800', 'Environ 10 000'], answer: 2, noShuffle: true,
     expl: 'Environ 7 800 fois. Son break de batterie, l’« Amen break », est l’un des samples les plus utilisés de l’histoire.' },
   { id: 'waka', type: 'qcm', cat: 'Les clips', lvl: 'dig', q: 'Dans quelle commune <b>Waka Flocka Flame</b>, vêtu d’Ünkut, a-t-il tourné le clip de <i>Where It At</i> ?', choices: ['Aulnay-sous-Bois', 'La Courneuve', 'Sevran', 'Saint-Denis'], answer: 0,
@@ -141,5 +147,5 @@ window.OSMOSE_QUESTIONS = [
   { id: 'r-groupes-us', type: 'relier', cat: 'Les groupes', lvl: 'init', q: 'Relie chaque rappeur à son groupe.', mot: ':',
     pairs: [['Big Boi', 'OutKast', 'outkast'], ['Havoc', 'Mobb Deep', 'mobb'], ['Ice Cube', 'N.W.A', 'cube'], ['Q-Tip', 'A Tribe Called Quest', 'atcq'], ['RZA', 'Wu-Tang Clan', 'wutang'], ['Lauryn Hill', 'Fugees', 'fugees'], ['Proof', 'D12', 'eminem']] },
   { id: 'r-noms', type: 'relier', cat: 'L’état civil', lvl: 'init', q: 'Relie chaque rappeur à son prénom d’état civil.', mot: 's’appelle',
-    pairs: [['Orelsan', 'Aurélien', 'orelsan'], ['Booba', 'Élie', 'booba'], ['Soprano', 'Saïd', 'psy4'], ['Jul', 'Julien', 'jul'], ['Gims', 'Gandhi', 'sexion'], ['Damso', 'William', 'damso'], ['Kaaris', 'Okou', 'kaaris'], ['MC Solaar', 'Claude', 'solaar']] },
+    pairs: [['Orelsan', 'Aurélien', 'orelsan'], ['Booba', 'Élie', 'booba'], ['Soprano', 'Saïd', 'psy4'], ['Jul', 'Julien', 'jul'], ['Gims', 'Gandhi', 'sexion'], ['Damso', 'William', 'damso'], ['MC Solaar', 'Claude', 'solaar']] },
 ];

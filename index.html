@@ -4,16 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07061A">
-<title>Osmose · Le quiz rap du soir</title>
-<meta name="description" content="Osmose, le quiz rap du soir : 5 à 20 questions, de 2 à 8 minutes, et une salle entière qui répond en même temps que toi.">
+<title>Osmose · Le quizz rap du soir</title>
+<meta name="description" content="Osmose, le quizz rap du soir : 5 à 15 questions, de 2 à 6 minutes, avec des lucioles qui font semblant de jouer avec vous.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Osmose · Le quiz rap du soir">
-<meta property="og:description" content="5 à 20 questions de rap, de 2 à 8 minutes. À la fin, une seule question : où tu te places.">
+<meta property="og:title" content="Osmose · Le quizz rap du soir">
+<meta property="og:description" content="5 à 15 questions de rap, de 2 à 6 minutes. À la fin, une seule question : où tu te places.">
 <meta property="og:url" content="https://amelienito.github.io/osmose/">
 <meta property="og:image" content="https://amelienito.github.io/osmose/assets/apercu.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<script src="https://amelienito.github.io/osb.js" defer></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307061A'/%3E%3Cpath d='M32 8c2 14 8 20 24 24-16 4-22 10-24 24-2-14-8-20-24-24 16-4 22-10 24-24z' fill='%23c9c4ff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,10 +59,10 @@ i,em{font-family:var(--serif);font-style:italic;font-weight:600;letter-spacing:-
 .hud{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px 0 12px}
 .hud::before{content:'';position:absolute;top:0;bottom:-18px;left:50%;width:100vw;transform:translateX(-50%);background:linear-gradient(rgba(7,6,26,.92) 40%,rgba(7,6,26,0));z-index:-1;pointer-events:none}
 .left{display:flex;align-items:center;gap:10px}
-.hub{position:relative;width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;color:var(--soft);border:1px solid var(--line);text-decoration:none;transition:color .2s,border-color .2s,transform .2s var(--spring)}
+.hub{position:relative;height:34px;padding:0 12px 0 9px;flex:none;border-radius:999px;display:inline-flex;align-items:center;gap:5px;color:var(--soft);border:1px solid var(--line);text-decoration:none;font-size:11.5px;font-weight:800;font-stretch:112%;letter-spacing:.12em;transition:color .2s,border-color .2s,transform .2s var(--spring)}
 .hub::after{content:"";position:absolute;inset:-7px}   /* la zone tactile dépasse le rond : plus facile au doigt */
 .hub:hover{color:var(--ink);border-color:var(--line2);transform:translateX(-2px)}
-.hub svg{width:17px;height:17px}
+.hub svg{width:15px;height:15px}
 .home{display:block;padding:4px 0;transition:opacity .2s}
 .home:hover{opacity:.75}
 .mark{height:17px;width:auto;display:block}
@@ -97,8 +98,9 @@ body[data-phase=intro] .hud::before{display:none}
 .tag{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(26px,7vw,38px);line-height:1.05;letter-spacing:-.01em;animation:rise .8s var(--ease) .25s both}
 .sub{margin:0;max-width:34ch;font-size:15.5px;line-height:1.45;color:var(--soft);animation:rise .8s var(--ease) .35s both}
 .howlong{margin:8px 0 0;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);animation:rise .8s var(--ease) .4s both}
-.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(460px,100%);animation:rise .8s var(--ease) .45s both}
-@media (min-width:760px){.modes{grid-template-columns:repeat(4,1fr);width:min(620px,100%)}}
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(460px,100%);animation:rise .8s var(--ease) .45s both}
+@media (min-width:760px){.modes{width:min(520px,100%)}}
+@media (max-width:759px){.modes{gap:8px}.mode{padding:12px 6px 12px 12px;min-height:80px;min-width:0}.mode svg{display:none}.mode .mq{font-size:11.5px}}
 .mode{position:relative;min-height:86px;border-radius:26px;padding:12px 44px 12px 18px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;text-align:left;transition:transform .25s var(--spring),box-shadow .25s,border-color .25s}
 .mode .mt{font-size:14px;font-weight:700;color:var(--soft);white-space:nowrap}
 .mode .mt b{font-family:var(--serif);font-weight:800;font-size:36px;line-height:.9;color:var(--ink);font-variant-numeric:lining-nums;margin-right:3px}
@@ -125,7 +127,7 @@ body[data-phase=intro] .hud::before{display:none}
 .qmult{margin-left:auto;font-size:12px;font-weight:800;font-stretch:115%;letter-spacing:.06em;color:var(--win);text-shadow:0 0 12px rgba(124,247,221,.6)}
 .q{margin:14px 0 0;font-size:clamp(25px,6.5vw,42px);font-weight:600;line-height:1.1;letter-spacing:-.022em;text-wrap:balance}
 .q b{font-weight:850}
-.q i{font-weight:650}
+.q i{font-family:var(--sans);font-style:italic;font-weight:560;letter-spacing:-.018em;font-variation-settings:normal}   /* (les titres d'œuvres en italique de la police de texte : l'italique du Bodoni, à cette taille, faisait lire « ritaux » pour « vitaux ») */
 .opt i,.pc i,.expl i,.meta i,.crowdline i{font-family:var(--sans);font-style:italic;font-weight:inherit;font-size:inherit;letter-spacing:0;font-variation-settings:normal}
 .pc .by{display:block;margin-top:1px;font-size:11.5px;font-weight:600;font-style:normal;color:var(--muted)}
 .opt .by{display:block;margin-top:2px;font-size:13px;font-weight:600;font-style:normal;color:var(--muted)}
@@ -247,7 +249,11 @@ body[data-phase=intro] .dock,body[data-phase=end] .dock{transform:translateY(120
 .pts{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
 .pts small{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
 .vword.long{font-size:clamp(38px,10.5vw,58px)}
-.expl{margin:8px 0 0;font-size:16px;line-height:1.45;color:var(--soft)}
+.expl{margin:8px 0 0;font-size:16px;line-height:1.45;color:var(--soft);text-wrap:pretty}
+.expl .ln{display:block;padding-left:1.05em;text-indent:-1.05em}
+.expl .ln::before{content:'· ';color:var(--muted)}
+.expl .ln0{display:block}
+.expl .ln+.ln,.expl .ln0+.ln{margin-top:3px}
 .expl b{color:var(--ink);font-weight:750}
 .crowdline{margin:9px 0 12px;font-size:13px;line-height:1.4;color:var(--muted)}
 .crowdline b{color:var(--ink)}
@@ -269,6 +275,20 @@ body.shake .app{animation:quake .5s ease}
 @keyframes quake{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,-2px)}80%{transform:translate(2px,2px)}}
 
 /* ---------- fin ---------- */
+.apres{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:6px;animation:rise .8s var(--ease) 1.5s both}
+.redesc{width:min(460px,100%);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:999px;text-decoration:none;color:var(--ink);text-align:left;transition:transform .25s var(--spring),border-color .2s}
+.redesc:hover{transform:translateY(-2px);border-color:var(--line2)}
+.redesc .cd{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,var(--night) 0 13%,rgba(255,255,255,.75) 14% 17%,transparent 18%),conic-gradient(from 20deg,#cfc9ff,#9ff3ff,#ffd6f5,#fff6c9,#cfc9ff,#9ff3ff,#ffd6f5,#cfc9ff);box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 18px rgba(170,160,255,.35);animation:cd 7s linear infinite}
+@keyframes cd{to{transform:rotate(360deg)}}
+.redesc .rt{min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14.5px;line-height:1.25}
+.redesc .rt>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.redesc .rt small{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.redesc .rt i{font-family:var(--sans);font-style:italic;font-weight:600;letter-spacing:0}
+.redesc .rt b{font-weight:750}
+.redesc .ra{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--soft);white-space:nowrap}
+.redesc .ra svg{width:14px;height:14px}
+@media (max-width:480px){.redesc .ra{font-size:0;gap:0}}
+@media (prefers-reduced-motion:reduce){.redesc .cd{animation:none}}
 .end{padding-top:18px;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center}
 .eyebrow{margin:0;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:650}
 .end h1{margin:0;font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(34px,9.5vw,58px);line-height:1;letter-spacing:-.02em;text-wrap:balance;animation:rise .8s var(--ease) both}
@@ -311,7 +331,7 @@ body.shake .app{animation:quake .5s ease}
 
 <div class="app">
   <header class="hud">
-    <div class="left"><a class="hub" href="https://amelienito.github.io/" aria-label="Retour à toutes les créations" title="Toutes les créations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></a><button class="home" id="home" type="button" aria-label="Retour à l’accueil d’Osmose"><img class="mark" src="assets/logo-blanc.png" alt="osmose" width="1200" height="194"></button></div>
+    <div class="left"><a class="hub" href="https://amelienito.github.io/#osmose" aria-label="Retour chez OSB Corporation, vers les autres jeux" title="OSB Corporation : les autres jeux"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>OSB</a><button class="home" id="home" type="button" aria-label="Retour à l’accueil d’Osmose"><img class="mark" src="assets/logo-blanc.png" alt="osmose" width="1200" height="194"></button></div>
     <div class="orbs" id="orbs" aria-hidden="true"></div>
     <div class="sc"><span class="score" id="score" aria-live="polite">0</span><button class="mute" id="mute" type="button" aria-label="Couper le son"></button></div>
   </header>
@@ -389,9 +409,9 @@ function relierInstance(q, used) {
 function relierExpl(q, good) {
   const L = q.lignes.split('|'), wrong = L.filter((_, i) => q._links[i] !== q.pairs[i]);
   if (!wrong.length) return good === L.length ? 'Les ' + L.length + ' liens sont bons.' : '';
-  return (wrong.length === 1 ? 'Celui-là t’a échappé : ' : 'Ceux qui t’ont échappé : ') + wrong.join(' ; ') + '.';
+  return wrong.length === 1 ? 'Celui-là t’a échappé : ' + wrong[0] + '.' : ['Ceux qui t’ont échappé :'].concat(wrong);
 }
-const MODES = [5, 10, 15, 20];
+const MODES = [5, 10, 15];
 const QUOTA = { 5: { relier: 1, molette: 1, vf: 1, qcm: 2 }, 10: { relier: 1, molette: 1, vf: 2, qcm: 6 }, 15: { relier: 1, molette: 2, vf: 3, qcm: 9 }, 20: { relier: 2, molette: 2, vf: 4, qcm: 12 } };
 const minutes = (n) => Math.max(1, Math.round(n * 24 / 60));
 function maxFor(n) { let s = 0; for (let i = 1; i <= n; i++) s += Math.round(100 * Math.min(2, 1 + .25 * Math.floor(i / 3))); return s; }
@@ -402,6 +422,9 @@ const BANK = prepare(window.OSMOSE_QUESTIONS || []);
 /* ============ OUTILS ============ */
 const fr = (n) => String(n).replace('.', ',');
 const nb = (s) => s.replace(/ ([?!:;»])/g, ' $1').replace(/« /g, '« ');
+// l'explication : un nom ou un titre court ne se coupe pas en fin de ligne ; une liste s'affiche une ligne par élément
+const souder = (s) => nb(s).replace(/<(b|i)>([^<]{1,24})<\/\1>/g, (m, t, x) => '<' + t + '>' + x.replace(/ /g, '\u00a0') + '</' + t + '>').replace(/ (\d{4})(?!\d)/g, '\u00a0$1');
+const explHtml = (e) => Array.isArray(e) ? e.map((l) => '<span class="' + (l.endsWith(':') ? 'ln0' : 'ln') + '">' + souder(l) + '</span>').join('') : souder(e || '');
 function apportion(w, total) {
   const s = w.reduce((a, b) => a + b, 0) || 1, raw = w.map((x) => x / s * total), base = raw.map(Math.floor);
   let rest = total - base.reduce((a, b) => a + b, 0);
@@ -453,6 +476,8 @@ function noise(t0, d, g, f1, f2) {
   src.connect(bp).connect(v).connect(A.out); src.start(s); src.stop(s + d + .05);
 }
 const semi = (f, n) => f * Math.pow(2, n / 12);
+let klaxonP = null;
+function klaxon() { const c = ac(); if (!c) return Promise.resolve(null); if (!klaxonP) klaxonP = fetch('assets/klaxon.mp3').then((r) => r.arrayBuffer()).then((b) => new Promise((ok, ko) => c.decodeAudioData(b, ok, ko))).catch(() => { klaxonP = null; return null; }); return klaxonP; }
 const SFX = {
   tick: () => osc('sine', 2100, 0, .035, .03),
   pick: () => { osc('sine', 880, 0, .12, .07); osc('sine', 1760, .015, .1, .025); },
@@ -462,10 +487,14 @@ const SFX = {
   ko: () => { osc('sine', 260, 0, .5, .13, { to: 80 }); osc('triangle', 196, .03, .35, .05, { to: 70 }); noise(0, .2, .05, 200, 120); },
   joker: () => { [0, 7, 12, 19, 24].forEach((n, i) => osc('sine', semi(784, n), i * .04, .3, .04)); noise(0, .45, .035, 1500, 6000); },
   whoosh: () => { noise(0, .8, .1, 180, 4200); osc('sine', 110, 0, .7, .08, { to: 55 }); },
-  horn: (t = 0) => {
-    [[0, .12], [.16, .12], [.32, .12], [.48, .95]].forEach(([s, d]) => {
-      [[1, 0], [1, 9], [1, -11], [2, 4], [1.5, 6]].forEach(([m, det], j) => osc('sawtooth', 452 * m, t + s, d, j > 2 ? .022 : .05, { from: 410 * m, det, lp: 2600, q: 2, a: .01, r: .06, to: d > .5 ? 430 * m : undefined }));
-    });
+  // le klaxon : un vrai (le même que le « pull up » de Music Discovery), trois coups — deux brefs, un long
+  horn: () => {
+    const c = ac(); if (!c || A.muted) return;
+    const jouer = (buf) => { if (!buf) return; const t = c.currentTime + .02;
+      [[0, .26], [.34, .26], [.68, null]].forEach(([dec, duree]) => { const src = c.createBufferSource(), g = c.createGain(); src.buffer = buf; g.gain.value = .5;
+        if (duree) { g.gain.setValueAtTime(.5, t + dec + duree - .03); g.gain.linearRampToValueAtTime(0, t + dec + duree); }
+        src.connect(g).connect(A.out); src.start(t + dec); if (duree) src.stop(t + dec + duree + .01); }); };
+    klaxon().then(jouer);
   },
   fanfare: () => { [0, 4, 7, 12, 16, 19, 24].forEach((n, i) => { osc('triangle', semi(392, n), .08 * i, .6, .05); osc('sine', semi(392, n + 12), .08 * i, .4, .02); }); },
 };
@@ -705,14 +734,16 @@ function showScore(to) {
   requestAnimationFrame(go); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
 }
 
+addEventListener('load', () => { if (window.OSB) OSB.ici('osmose'); });
+
 /* ----- accueil ----- */
 let mode = MODES.includes(store.get('osmose-mode', 10)) ? store.get('osmose-mode', 10) : 10;
 function renderIntro() {
   document.body.dataset.phase = 'intro'; sheet(false); crowd.idle(); G = null;
   main.innerHTML = '<section class="intro">' +
     '<div class="logo-wrap" id="logo"><img src="assets/logo-chrome.webp" alt="osmose" width="1400" height="353"><div class="shine"></div></div>' +
-    '<p class="tag">Le quiz rap du soir.</p>' +
-    '<p class="sub">Une salle de 126 lucioles répond en même temps que toi. À la fin, une seule question : où tu te places.</p>' +
+    '<p class="tag">Le quizz rap du soir.</p>' +
+    '<p class="sub">En attendant d’avoir des vraies statistiques, j’ai mis des petites lucioles qui font semblant de jouer avec vous.</p>' +
     '<p class="howlong">Tu as combien de temps ?</p>' +
     '<div class="modes">' + MODES.map((n) => '<button class="mode ' + (n === mode ? 'on' : 'glassy') + '" type="button" data-n="' + n + '" aria-label="Jouer ' + n + ' questions, environ ' + minutes(n) + ' minutes">' +
       '<span class="mt"><b>' + minutes(n) + '</b>min</span><span class="mq">' + n + ' questions</span>' +
@@ -724,7 +755,7 @@ function renderIntro() {
 }
 function start() {
   if (start.busy) return; start.busy = true; setTimeout(() => { start.busy = false; }, 700);
-  ac(); SFX.whoosh(); haptic(15);
+  ac(); klaxon(); SFX.whoosh(); haptic(15);
   const logo = $('#logo');
   if (logo) { logo.classList.add('out'); const r = logo.getBoundingClientRect(); crowd.idle(); crowd.burst(r.left + r.width / 2, r.top + r.height / 2, 24); fluid.u.f = .8; }
   setTimeout(() => { newGame(mode); document.body.dataset.phase = 'q'; renderQ(); }, reduce ? 0 : 480);
@@ -944,15 +975,15 @@ function verdict(kind, crowdPct, el, extra = {}) {
   let line;
   const pc = '<b>' + Math.round(crowdPct) + ' %</b>';
   if (q.tous) line = 'Tout le monde a eu juste.'; else
-  if (q.type === 'molette') line = pc + ' des joueurs ont dit pile ' + q.answer + (kind === 'ok' ? ' ; toi aussi.' : '.');
-  else if (q.type === 'relier') line = pc + ' des joueurs ont tout relié juste' + (kind === 'ok' ? ' ; toi aussi.' : '.');
-  else line = pc + ' des joueurs ont trouvé' + (kind === 'ok' && crowdPct < 30 ? ' : tu fais partie des rares.' : '.');
+  if (q.type === 'molette') line = pc + ' des lucioles ont dit pile ' + q.answer + (kind === 'ok' ? ' ; toi aussi.' : '.');
+  else if (q.type === 'relier') line = pc + ' des lucioles ont tout relié juste' + (kind === 'ok' ? ' ; toi aussi.' : '.');
+  else line = pc + ' des lucioles ont trouvé' + (kind === 'ok' && crowdPct < 30 ? ' : tu fais partie des rares.' : '.');
   const w = WORDS[kind][Math.floor(Math.random() * WORDS[kind].length)];
   const letters = [...w].map((ch, i) => '<span style="animation-delay:' + (i * 38) + 'ms;background-position:' + (i * 9) + '% 0">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>').join('');
   const small = extra.diff ? '<small>écart de ' + extra.diff + '</small>' : '';
   const last = G.i >= G.n - 1;
   sheetHtml = '<div class="vrow"><span class="vword ' + kind + (w.length > 9 ? ' long' : '') + '">' + letters + '</span><span class="pts ' + (gain ? (kind === 'mid' ? 'mid' : '') : 'zero') + '">' + '<span>' + (gain ? '+' + gain : '0') + '</span>' + small + '</span></div>' +
-    '<p class="expl">' + nb(kind === 'ok' && q.explOk ? q.explOk : kind !== 'ok' && q.explKo ? q.explKo : q.expl) + '</p><p class="crowdline">' + line + '</p>' +
+    '<p class="expl">' + explHtml(kind === 'ok' && q.explOk ? q.explOk : kind !== 'ok' && q.explKo ? q.explKo : q.expl) + '</p><p class="crowdline">' + line + '</p>' +
     '<button class="next' + (last ? ' holo' : '') + '" type="button" id="next">' + (last ? 'Voir mon classement' : 'Question suivante') + ' <kbd>Entrée</kbd></button>';
   setTimeout(() => {
     sheet(true);
@@ -1001,11 +1032,12 @@ function renderEnd() {
   main.innerHTML = '<section class="end">' +
     '<p class="eyebrow">Partie de ' + G.n + ' questions terminée</p><h1>' + title + '</h1>' +
     '<div class="big" id="big">0</div><div class="bigl">points</div>' +
-    '<p class="rankline"><b>' + rank + '<sup>' + (rank === 1 ? 'er' : 'e') + '</sup></b> sur ' + PLAYERS + ' joueurs ce soir</p>' +
-    '<div class="chartbox glassy"><div class="chart" id="chart"><span class="you-l" id="youl">toi</span></div><div class="chart-l"><span>1<sup>er</sup></span><span>chaque lumière est un joueur</span><span>' + PLAYERS + '<sup>e</sup></span></div></div>' +
+    '<p class="rankline"><b>' + rank + '<sup>' + (rank === 1 ? 'er' : 'e') + '</sup></b> sur ' + PLAYERS + ' ce soir, lucioles comprises</p>' +
+    '<div class="chartbox glassy"><div class="chart" id="chart"><span class="you-l" id="youl">toi</span></div><div class="chart-l"><span>1<sup>er</sup></span><span>chaque lumière est une luciole</span><span>' + PLAYERS + '<sup>e</sup></span></div></div>' +
     '<div class="stats"><div class="glassy"><b>' + ok + '/' + G.n + '</b><span>bonnes réponses</span></div><div class="glassy"><b>' + G.best + '</b><span>meilleure série</span></div><div class="glassy"><b>' + used + '/' + G.jmax + '</b><span>jokers</span></div></div>' +
     '<div class="res">' + G.res.map((r, i) => '<i class="' + r + '" style="animation-delay:' + (1.2 + i * .06) + 's"></i>').join('') + '</div>' +
     '<div class="endrow"><button class="next holo" type="button" id="share">Partager</button><button class="ghost glassy" type="button" id="again">Rejouer</button></div>' +
+    '<div class="apres" id="apres"></div>' +
     '</section>';
   scrollTo({ top: 0, behavior: 'auto' });
   const ch = $('#chart'), py = (s) => 1 - (s / MAXSCORE) * .88 - .05;
@@ -1027,7 +1059,33 @@ function renderEnd() {
   const sq = { ok: '🟣', mid: '🟠', ko: '⚫', skip: '⚪' };
   const text = 'Osmose · ' + G.n + ' questions · ' + G.score + ' pts · ' + rank + (rank === 1 ? 'er' : 'e') + ' sur ' + PLAYERS + '\n' + G.res.map((r) => sq[r] || '⚪').join('');
   $('#share').onclick = async () => { try { await navigator.clipboard.writeText(text); $('#share').textContent = 'Copié !'; } catch (e) { $('#share').textContent = 'Copie impossible ici'; } };
-  $('#again').onclick = () => { SFX.whoosh(); crowd.idle(); crowd.burst(innerWidth / 2, innerHeight / 2, 20); newGame(G.n); document.body.dataset.phase = 'q'; renderQ(); };
+  // rejouer : entre deux parties, parfois, une coupure pub (une réclame pour un autre jeu d'OSB Corporation, qu'on peut passer)
+  $('#again').onclick = async () => { if (window.OSB) { try { await OSB.pub({ ici: 'osmose' }); } catch (e) {} } SFX.whoosh(); crowd.idle(); crowd.burst(innerWidth / 2, innerHeight / 2, 20); newGame(G.n); document.body.dataset.phase = 'q'; renderQ(); };
+  redescendre($('#apres'));
+  if (window.OSB) OSB.pied($('#apres'), { ici: 'osmose', contexte: 'fin de partie, ' + G.n + ' questions' });
+}
+
+/* ----- un morceau pour redescendre : pioché dans la sélection de Music Discovery, le site voisin -----
+   (de préférence un artiste dont la partie vient de parler ; le lien ouvre Music Discovery sur ce morceau) */
+let mdP = null;
+function morceauxMD() {
+  if (!mdP) mdP = fetch('/music-discovery/data.js').then((r) => (r.ok ? r.text() : '')).then((t) => { try { return new Function(t + '\n;return typeof MORCEAUX !== "undefined" ? MORCEAUX : [];')(); } catch (e) { return []; } }).catch(() => []);
+  return mdP;
+}
+function redescendre(el) {
+  const partie = G;
+  morceauxMD().then((L) => {
+    const rap = L.filter((m) => m && m.lien && m.titre && (m.voix === 'rap' || (m.tags || []).includes('rap')));
+    if (!rap.length || !el || !el.isConnected) return;
+    const txt = JSON.stringify(partie.list).toLowerCase();
+    const lies = rap.filter((m) => { const a = String(m.artiste).split(/ feat\.| & |,/)[0].trim().toLowerCase(); return a.length > 2 && (txt.includes('>' + a + '<') || txt.includes('"' + a + '"')); });
+    const lot = lies.length ? lies : rap, m = lot[Math.floor(Math.random() * lot.length)];
+    const id = (String(m.lien).match(/[?&]v=([\w-]{11})|youtu\.be\/([\w-]{11})/) || []).slice(1).find(Boolean);
+    const propre = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    const a = document.createElement('a'); a.className = 'redesc glassy'; a.href = '/music-discovery/?depuis=osmose' + (id ? '&m=' + id : '');
+    a.innerHTML = '<span class="cd" aria-hidden="true"></span><span class="rt"><small>' + (lies.length ? 'Puisqu’on en parlait' : 'Pour redescendre') + '</small><span><i>' + propre(m.titre) + '</i>, <b>' + propre(m.artiste) + '</b></span></span><span class="ra">Music Discovery<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+    el.prepend(a);
+  });
 }
 
 /* ----- clavier ----- */
