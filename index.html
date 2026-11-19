@@ -391,7 +391,7 @@ body.shake .app{animation:quake .5s ease}
 <div class="take" id="take" aria-hidden="true"><div class="t1" id="take1"></div><div class="t2" id="take2"></div></div>
 <canvas class="layer" id="fx" aria-hidden="true"></canvas>
 
-<script src="questions.js?v=20261119"></script>
+<script src="questions.js?v=20261119b"></script>
 <script>
 (() => {
 'use strict';
@@ -459,7 +459,11 @@ function relierExpl(q, good) {
   return wrong.length === 1 ? 'Celui-là t’a échappé : ' + wrong[0] + '.' : ['Ceux qui t’ont échappé :'].concat(wrong);
 }
 const MODES = [5, 10, 15];
-const QUOTA = { 5: { relier: 1, molette: 1, vf: 1, qcm: 2 }, 10: { relier: 1, molette: 1, vf: 2, qcm: 6 }, 15: { relier: 1, molette: 2, vf: 3, qcm: 9 }, 20: { relier: 2, molette: 2, vf: 4, qcm: 12 } };
+// combien de questions de chaque format : pas de quota fixe (avec des quotas, les vrai/faux et les « relie » revenaient sans arrêt
+// et certaines questions classiques n'arrivaient jamais) ; on suit l'ordre de rotation, avec juste un plafond par format pour que la partie reste variée,
+// et à partir de 10 questions au moins un « relie », une molette et un vrai/faux
+const PLAFOND = (n, type) => ({ relier: Math.ceil(n / 10), molette: Math.ceil(n / 6), vf: Math.ceil(n / 4) })[type] ?? n;
+const MINIMUM = (n) => (n >= 10 ? { relier: 1, molette: 1, vf: 1 } : {});
 const minutes = (n) => Math.max(1, Math.round(n * 24 / 60));
 function maxFor(n) { let s = 0; for (let i = 1; i <= n; i++) s += Math.round(100 * Math.min(2, 1 + .25 * Math.floor(i / 3))); return s; }
 
@@ -743,8 +747,13 @@ function newGame(n) {
   const order = (arr) => arr.map((q) => [vu(q, seen, sg) + Math.random() * .9, q]).sort((x, y) => x[0] - y[0]).map((x) => x[1]);
   const force = (new URLSearchParams(location.search).get('q') || '').split(',').filter(Boolean);   // (pour les essais : ?q=id1,id2)
   force.forEach((id) => { const c = BANK.find((q) => q.id === id); if (c) take(c); });
-  Object.entries(QUOTA[n]).forEach(([type, k]) => { let got = 0; for (const c of order(BANK.filter((q) => q.type === type))) { if (got >= k || pick.length >= n) break; if (take(c)) got++; } });
-  for (const c of order(BANK)) { if (pick.length >= n) break; take(c); }
+  // d'abord l'ordre de rotation (en gardant de la place pour les formats obligatoires), puis ces formats-là, en dernier :
+  // un « relie » pioché en premier prenait des sujets (Booba…) et bloquait les questions qui en parlent
+  const mins = MINIMUM(n), reste = () => Object.entries(mins).reduce((t, [type, k]) => t + Math.max(0, k - pick.filter((p) => p.type === type).length), 0);
+  const place = (c) => pick.filter((p) => p.type === c.type).length < PLAFOND(n, c.type);
+  for (const c of order(BANK)) { if (pick.length >= n - reste()) break; if (place(c)) take(c); }
+  Object.entries(mins).forEach(([type, k]) => { let got = pick.filter((p) => p.type === type).length; for (const c of order(BANK.filter((q) => q.type === type))) { if (got >= k || pick.length >= n) break; if (take(c)) got++; } });
+  for (const c of order(BANK)) { if (pick.length >= n) break; take(c); }   // (au cas où les plafonds et les sujets communs auraient laissé des trous)
   const list = pick.slice(0, force.length).concat(shuffle(pick.slice(force.length)));
   const first = list.findIndex((q) => q.type === 'qcm' && q.lvl === 'gp'), fi = first >= 0 ? first : list.findIndex((q) => q.type === 'qcm');
   if (fi > 0 && !force.length) [list[0], list[fi]] = [list[fi], list[0]];
