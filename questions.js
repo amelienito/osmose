@@ -90,7 +90,7 @@ window.OSMOSE_QUESTIONS = [
     expl: '<i>Mes repères</i>, de <b>La Fouine</b>.' },
   { id: 'c-fantome', type: 'casting', lvl: 'init', g: 'cent13', invites: 'SCH, S.Pri Noir, Lartiste, Sadek, AP', annee: 2017, album: 'Fantôme', artiste: 'Rim’K',
     expl: '<i>Fantôme</i>, de <b>Rim’K</b>. <b>AP</b> en invité : on reste en famille.' },
-  { id: 'dmt', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['dmt', 'ortho'], q: 'Ce titre d’<b>Action Bronson</b> sample <i>En se prenant par la main</i> de <b>Jean Claudric</b> et porte la formule chimique de la DMT. Comment s’écrit-il exactement ?', choices: ['C12H16N6', 'C16H12N2', 'C16H12N6', 'C12H16N2'], answer: 3, crowd: [22, 27, 13, 38],
+  { id: 'dmt', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['dmt', 'ortho'], q: 'Ce titre d’<b>Action Bronson</b> porte la formule chimique de la DMT. Comment s’écrit-il exactement ?', choices: ['C12H16N6', 'C16H12N2', 'C16H12N6', 'C12H16N2'], answer: 3, crowd: [22, 27, 13, 38],
     expl: 'C12H16N2, sur <i>Only for Dolphins</i> (2020), produit par <b>Harry Fraud</b>.' },
   { id: 'nqnt', type: 'qcm', cat: 'L’orthographe', lvl: 'init', g: ['vald', 'ortho'], q: 'En 2012, <b>Vald</b> sort une première mixtape au titre imprononçable. Comment s’écrit-il exactement ?', choices: ['NQNTMQMQMB', 'NQNTMQMQB', 'NQTNMQMQMB', 'NQNTMQMMQB'], answer: 0, crowd: [34, 25, 19, 22],
     expl: 'NQNTMQMQMB, pour « Ni Queue Ni Tête Mais Qui Met Quand Même Bien ». Dix lettres, il suffisait de compter.' },
@@ -98,7 +98,8 @@ window.OSMOSE_QUESTIONS = [
     expl: 'CDGLAXJFKHNDATH : cinq codes d’aéroport collés. Paris, Los Angeles, New York, Tokyo, Athènes.' },
   { id: 'nmi', type: 'qcm', cat: 'L’orthographe', lvl: 'dig', g: ['solaar', 'ortho'], q: 'Sur <i>Prose combat</i>, <b>MC Solaar</b> invite <b>Ménélik</b> et les <b>Sages Poètes de la Rue</b> sur un titre à lire à voix haute. Comment s’écrit-il exactement ?', choices: ['L’NMIACCd’HTCK72KPDP', 'L’NMIACd’HTCK72KPDP', 'L’NMIACCd’HTK72KPDP', 'L’NMIACCd’HTCK27KPDP'], answer: 0, crowd: [29, 27, 24, 20],
     expl: 'L’NMIACCd’HTCK72KPDP. À voix haute : « L’ennemi a cessé d’acheter ses cassettes de cape et d’épée ».' },
-  { id: 'amen', type: 'qcm', cat: 'Les samples', lvl: 'init', q: 'D’après WhoSampled, combien de fois <i>Amen, Brother</i> des <b>Winstons</b> a-t-il été samplé (novembre 2026) ?', choices: ['Environ 5 000', 'Environ 6 500', 'Environ 7 800', 'Environ 10 000'], answer: 2, noShuffle: true,
+  { id: 'amen', type: 'qcm', cat: 'Les samples', lvl: 'init', q: 'D’après WhoSampled, combien de fois <i>Amen, Brother</i> des <b>Winstons</b> a-t-il été samplé (novembre 2026) ?', choices: ['Environ 5 200', 'Environ 6 400', 'Environ 7 800', 'Environ 9 100'], answer: 2,   // (toutes au même degré de précision : un seul chiffre « pas rond » trahissait la réponse)
+    noShuffle: true,
     expl: 'Environ 7 800 fois. Son break de batterie, l’« Amen break », est l’un des samples les plus utilisés de l’histoire.' },
   { id: 'waka', type: 'qcm', cat: 'Les clips', lvl: 'dig', q: 'Dans quelle commune <b>Waka Flocka Flame</b>, vêtu d’Ünkut, a-t-il tourné le clip de <i>Where It At</i> ?', choices: ['Aulnay-sous-Bois', 'La Courneuve', 'Sevran', 'Saint-Denis'], answer: 0,
     expl: 'Aulnay-sous-Bois, devant la caméra de Chris Macari.' },
