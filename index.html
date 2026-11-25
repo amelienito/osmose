@@ -198,6 +198,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;heigh
 input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:var(--line2)}
 input[type=range]::-moz-range-thumb{width:30px;height:30px;border:0;border-radius:50%;background:var(--lilac);box-shadow:0 0 20px rgba(198,182,255,.8)}
 .dial.locked .ctrl,.dial.locked .hint,.dial.locked .cta{display:none}
+/* écran bas (PC 1366 × 768, MacBook 13″, iPad en largeur) : le grand chiffre et la question se resserrent pour que « Valider » reste au-dessus des jokers */
+@media (max-height:860px){
+  .stage{padding-top:12px}
+  .q{font-size:clamp(23px,min(6.5vw,5.1vh),42px)}
+  .num{font-size:clamp(84px,min(36vw,20vh),196px)}
+  .dial{gap:6px;margin-top:4px}
+  .hint{margin-top:-4px}
+  .rain{height:110px;margin-top:18px}
+}
 .mine{font-size:14px;color:var(--soft)}
 .mine b{color:var(--ink)}
 .rain{position:relative;width:100%;height:150px;border-bottom:1px solid var(--line2);margin-top:28px}
