@@ -60,7 +60,7 @@ i,em{font-family:var(--serif);font-style:italic;font-weight:600;letter-spacing:-
 .hud{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px 0 12px}
 .hud::before{content:'';position:absolute;top:0;bottom:-18px;left:50%;width:100vw;transform:translateX(-50%);background:linear-gradient(var(--night) calc(100% - 18px),rgba(7,6,26,0));z-index:-1;pointer-events:none}   /* (opaque : quand la page défile, la question passe dessous proprement au lieu de se mêler au score et aux pastilles) */
 .left{display:flex;align-items:center;gap:10px}
-.hub{position:relative;height:34px;padding:0 12px 0 9px;flex:none;border-radius:999px;display:inline-flex;align-items:center;gap:5px;color:var(--soft);border:1px solid var(--line);text-decoration:none;font-size:11.5px;font-weight:800;font-stretch:112%;letter-spacing:.12em;transition:color .2s,border-color .2s,transform .2s var(--spring)}
+.hub{position:relative;height:34px;padding:0 12px 0 9px;flex:none;border-radius:999px;display:inline-flex;align-items:center;gap:5px;color:var(--soft);border:1px solid var(--line);text-decoration:none;font-size:12.5px;font-weight:800;font-stretch:112%;letter-spacing:.12em;transition:color .2s,border-color .2s,transform .2s var(--spring)}
 .hub::after{content:"";position:absolute;inset:-7px}   /* la zone tactile dépasse le rond : plus facile au doigt */
 .hub:hover{color:var(--ink);border-color:var(--line2);transform:translateX(-2px)}
 .hub svg{width:15px;height:15px}
@@ -124,18 +124,18 @@ body[data-phase=intro] .hud::before{display:none}
 .qnum{font-family:var(--serif);font-style:italic;font-weight:800;font-variation-settings:'opsz' 30;font-size:46px;line-height:.8;letter-spacing:-.03em;background:var(--holo);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holo 6s linear infinite}
 .qnum small{font-size:.5em;margin-right:.08em}
 .qnum span{-webkit-text-fill-color:var(--faint);font-size:.42em;font-style:normal;font-weight:500;margin-left:.15em}
-.qcat{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:650}
+.qcat{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:650}
 .qmult{margin-left:auto;font-size:12px;font-weight:800;font-stretch:115%;letter-spacing:.06em;color:var(--win);text-shadow:0 0 12px rgba(124,247,221,.6)}
 .q{margin:14px 0 0;font-size:clamp(25px,6.5vw,42px);font-weight:600;line-height:1.1;letter-spacing:-.022em;text-wrap:balance}
 .q b{font-weight:850}
 .q i{font-family:var(--sans);font-style:italic;font-weight:560;letter-spacing:-.018em;font-variation-settings:normal}   /* (les titres d'œuvres en italique de la police de texte : l'italique du Bodoni, à cette taille, faisait lire « ritaux » pour « vitaux ») */
 .opt i,.pc i,.expl i,.meta i,.crowdline i{font-family:var(--sans);font-style:italic;font-weight:inherit;font-size:inherit;letter-spacing:0;font-variation-settings:normal}
-.pc .by{display:block;margin-top:1px;font-size:11.5px;font-weight:600;font-style:normal;color:var(--muted)}
-.opt .by{display:block;margin-top:2px;font-size:13px;font-weight:600;font-style:normal;color:var(--muted)}
+.pc .by{display:block;margin-top:1px;font-size:12.5px;font-weight:600;font-style:normal;color:var(--soft)}
+.opt .by{display:block;margin-top:2px;font-size:13px;font-weight:600;font-style:normal;color:var(--soft)}
 .q .w{animation:word .7s var(--ease) backwards}
 @keyframes word{from{opacity:0;filter:blur(8px)}}
 .meta{margin:16px 0 0;padding:14px 16px;border-radius:18px;border:1px solid var(--line);background:var(--glass);display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline;animation:rise .7s var(--ease) .25s both}
-.meta dt{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:650}
+.meta dt{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:650}
 .meta dd{margin:0;font-size:16.5px;font-weight:700;line-height:1.4}
 .meta .nm{white-space:nowrap}
 .meta .sep{color:var(--faint);margin:0 .4em;font-weight:400}
@@ -216,7 +216,7 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border:0;border-radiu
 .rain-l{width:100%;display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:6px}
 .cta{width:100%;height:58px;border-radius:999px;background:var(--ink);color:var(--night);font-weight:850;font-stretch:112%;font-size:17px;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:4px;transition:transform .2s var(--spring)}
 .cta:active{transform:scale(.97)}
-kbd{font-family:var(--sans);font-size:11px;font-weight:700;opacity:.55;border:1px solid currentColor;border-radius:6px;padding:1px 6px}
+kbd{font-family:var(--sans);font-size:11.5px;font-weight:700;opacity:.72;border:1px solid currentColor;border-radius:6px;padding:1px 6px}
 @media (hover:none){kbd{display:none}}
 
 /* relier */
@@ -259,7 +259,7 @@ body[data-phase=intro] .dock,body[data-phase=end] .dock{transform:translateY(120
 .pts{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
 .pts small{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
 .vword.long{font-size:clamp(38px,10.5vw,58px)}
-.expl{margin:8px 0 0;font-size:16px;line-height:1.45;color:var(--soft);text-wrap:pretty}
+.expl{margin:8px 0 0;max-width:64ch;font-size:16px;line-height:1.5;color:var(--soft);text-wrap:pretty}
 .expl .ln{display:block;padding-left:1.05em;text-indent:-1.05em}
 .expl .ln::before{content:'· ';color:var(--muted)}
 .expl .ln0{display:block}
